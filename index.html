@@ -25,7 +25,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:999;display:flex;justify-content
 
 /* ─── HERO ─── */
 #home{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 64px 100px;position:relative;overflow:hidden;}
-.hero-bg{position:absolute;inset:0;background:url('hero-bg.jpg') center center/cover no-repeat;}.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,.92) 0%, rgba(0,0,0,.6) 50%, rgba(0,0,0,.75) 100%);}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 60% 40%, rgba(255,255,255,.055) 0%, transparent 65%),radial-gradient(ellipse 40% 40% at 20% 80%, rgba(255,255,255,.02) 0%, transparent 60%);}
 .hero-noise{position:absolute;inset:0;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");background-size:200px;}
 .hero-tag{font-size:.65rem;letter-spacing:.35em;text-transform:uppercase;color:#333;margin-bottom:32px;display:flex;align-items:center;gap:14px;}
 .hero-tag::before{content:'';width:36px;height:1px;background:#222;}
@@ -136,7 +136,6 @@ footer{padding:48px 64px;border-top:1px solid #0a0a0a;display:flex;justify-conte
   <ul class="nav-links">
     <li><a href="#home">Home</a></li>
     <li><a href="#our-services">บริการ</a></li>
-    <li><a href="#locations">สาขา</a></li>
     <li><a href="#policy">นโยบาย</a></li>
     <li><a href="#contact">ติดต่อ</a></li>
     <li><a href="#contact" class="nav-cta">จองเลย</a></li>
@@ -349,145 +348,6 @@ footer{padding:48px 64px;border-top:1px solid #0a0a0a;display:flex;justify-conte
 </section>
 
 
-<!-- LOCATIONS -->
-<section id="locations" style="border-top:1px solid #111;">
-  <div class="sec-label">Where To Find Us</div>
-  <h2 class="sec-title">Locations</h2>
-
-  <style>
-  #locations .loc-layout{display:grid;grid-template-columns:240px 1fr;gap:60px;align-items:start;}
-  #locations .loc-map-wrap{position:sticky;top:110px;}
-  #locations .loc-map-svg{width:100%;max-width:240px;}
-  #locations .topo-ring{fill:none;stroke:#141414;stroke-width:.9;}
-  #locations .loc-dot{transition:opacity .3s;cursor:pointer;}
-  #locations .loc-dot.dim{opacity:.06;}
-  #locations .loc-filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:36px;}
-  #locations .loc-filter{background:transparent;border:1px solid #1a1a1a;color:#333;font-family:'Prompt',sans-serif;font-size:.7rem;letter-spacing:.04em;padding:7px 18px;cursor:pointer;transition:all .2s;outline:none;}
-  #locations .loc-filter:hover{border-color:#444;color:#888;}
-  #locations .loc-filter.active{background:#fff;border-color:#fff;color:#000;}
-  #locations .loc-count{font-size:.58rem;opacity:.45;margin-left:3px;}
-  #locations .loc-chips{display:flex;flex-wrap:wrap;gap:10px;}
-  #locations .loc-chip{display:flex;flex-direction:column;border:1px solid #111;padding:14px 20px;transition:border-color .2s,background .2s;cursor:default;}
-  #locations .loc-chip:hover{border-color:#2a2a2a;background:#050505;}
-  #locations .loc-chip.hidden{display:none;}
-  #locations .loc-chip-name{font-family:'Prompt',sans-serif;font-size:.88rem;font-weight:400;color:#bbb;line-height:1.3;}
-  #locations .loc-chip-sub{font-family:'DM Sans',sans-serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:#262626;margin-top:5px;}
-  #locations .loc-total{font-family:'Prompt',sans-serif;font-size:.7rem;color:#1e1e1e;margin-top:28px;letter-spacing:.04em;}
-  @media(max-width:900px){#locations .loc-layout{grid-template-columns:1fr;gap:36px;}#locations .loc-map-wrap{position:static;}#locations .loc-map-svg{max-width:200px;}}
-  </style>
-
-  <div class="loc-layout">
-
-    <!-- Topographic rings map — BKK as center -->
-    <div class="loc-map-wrap">
-      <svg class="loc-map-svg" viewBox="0 0 220 360" fill="none" xmlns="http://www.w3.org/2000/svg">
-
-        <!-- Concentric topo rings centered on Bangkok (110, 180) -->
-        <circle class="topo-ring" cx="110" cy="180" r="22"/>
-        <circle class="topo-ring" cx="110" cy="180" r="50"/>
-        <circle class="topo-ring" cx="110" cy="180" r="80"/>
-        <circle class="topo-ring" cx="110" cy="180" r="112"/>
-        <circle class="topo-ring" cx="110" cy="180" r="142"/>
-
-        <!-- Compass labels -->
-        <text x="110" y="26" fill="#111" font-size="5.5" font-family="sans-serif" text-anchor="middle">N</text>
-        <text x="213" y="183" fill="#111" font-size="5.5" font-family="sans-serif">E</text>
-        <text x="110" y="350" fill="#111" font-size="5.5" font-family="sans-serif" text-anchor="middle">S</text>
-        <text x="3"   y="183" fill="#111" font-size="5.5" font-family="sans-serif">W</text>
-
-        <!-- Bangkok — 5 dots, center cluster -->
-        <circle class="loc-dot" data-region="bkk" cx="110" cy="180" r="8"   fill="#fff" opacity=".6"/>
-        <circle class="loc-dot" data-region="bkk" cx="107" cy="177" r="2.5" fill="#fff" opacity=".5"/>
-        <circle class="loc-dot" data-region="bkk" cx="114" cy="179" r="2.5" fill="#fff" opacity=".5"/>
-        <circle class="loc-dot" data-region="bkk" cx="109" cy="184" r="2.5" fill="#fff" opacity=".5"/>
-        <circle class="loc-dot" data-region="bkk" cx="106" cy="181" r="2.5" fill="#fff" opacity=".5"/>
-        <text x="110" y="198" fill="#333" font-size="6" font-family="sans-serif" text-anchor="middle">BKK</text>
-
-        <!-- Central — 5 dots, W/NW direction ~50px -->
-        <circle class="loc-dot" data-region="central" cx="68"  cy="152" r="3.5" fill="#fff" opacity=".3"/>
-        <circle class="loc-dot" data-region="central" cx="62"  cy="163" r="3.5" fill="#fff" opacity=".3"/>
-        <circle class="loc-dot" data-region="central" cx="57"  cy="175" r="3.5" fill="#fff" opacity=".3"/>
-        <circle class="loc-dot" data-region="central" cx="72"  cy="143" r="3.5" fill="#fff" opacity=".3"/>
-        <circle class="loc-dot" data-region="central" cx="65"  cy="160" r="3.5" fill="#fff" opacity=".3"/>
-        <text x="36" y="180" fill="#1c1c1c" font-size="5.5" font-family="sans-serif">กลาง</text>
-
-        <!-- East — 4 dots, SE direction ~80px -->
-        <circle class="loc-dot" data-region="east" cx="163" cy="237" r="3.5" fill="#fff" opacity=".3"/>
-        <circle class="loc-dot" data-region="east" cx="170" cy="225" r="3.5" fill="#fff" opacity=".3"/>
-        <circle class="loc-dot" data-region="east" cx="174" cy="215" r="3.5" fill="#fff" opacity=".3"/>
-        <circle class="loc-dot" data-region="east" cx="159" cy="248" r="3.5" fill="#fff" opacity=".3"/>
-        <text x="155" y="262" fill="#1c1c1c" font-size="5.5" font-family="sans-serif">ตะวันออก</text>
-
-        <!-- Northeast — 6 dots, NE direction ~100–140px -->
-        <circle class="loc-dot" data-region="northeast" cx="178" cy="122" r="3.5" fill="#fff" opacity=".3"/>
-        <circle class="loc-dot" data-region="northeast" cx="187" cy="97"  r="3.5" fill="#fff" opacity=".3"/>
-        <circle class="loc-dot" data-region="northeast" cx="192" cy="82"  r="3.5" fill="#fff" opacity=".3"/>
-        <circle class="loc-dot" data-region="northeast" cx="197" cy="68"  r="3.5" fill="#fff" opacity=".3"/>
-        <circle class="loc-dot" data-region="northeast" cx="180" cy="110" r="3.5" fill="#fff" opacity=".3"/>
-        <circle class="loc-dot" data-region="northeast" cx="193" cy="92"  r="3.5" fill="#fff" opacity=".3"/>
-        <text x="184" y="60" fill="#1c1c1c" font-size="5.5" font-family="sans-serif">อีสาน</text>
-
-        <!-- North — 1 dot, due N ~142px -->
-        <circle class="loc-dot" data-region="north" cx="110" cy="38" r="4" fill="#fff" opacity=".3"/>
-        <text x="116" y="38" fill="#1c1c1c" font-size="5.5" font-family="sans-serif">เหนือ</text>
-
-        <!-- South — 2 dots, due S ~140px -->
-        <circle class="loc-dot" data-region="south" cx="106" cy="320" r="3.5" fill="#fff" opacity=".3"/>
-        <circle class="loc-dot" data-region="south" cx="109" cy="333" r="3.5" fill="#fff" opacity=".3"/>
-        <text x="82" y="348" fill="#1c1c1c" font-size="5.5" font-family="sans-serif">ใต้</text>
-
-      </svg>
-      <div class="loc-total">23 สาขา</div>
-    </div>
-
-    <!-- Filter + Chips -->
-    <div>
-      <div class="loc-filters">
-        <button class="loc-filter active" data-region="all">ทั้งหมด<span class="loc-count">23</span></button>
-        <button class="loc-filter" data-region="bkk">กรุงเทพ<span class="loc-count">5</span></button>
-        <button class="loc-filter" data-region="central">กลาง<span class="loc-count">5</span></button>
-        <button class="loc-filter" data-region="east">ตะวันออก<span class="loc-count">4</span></button>
-        <button class="loc-filter" data-region="northeast">อีสาน<span class="loc-count">6</span></button>
-        <button class="loc-filter" data-region="north">เหนือ<span class="loc-count">1</span></button>
-        <button class="loc-filter" data-region="south">ใต้<span class="loc-count">2</span></button>
-      </div>
-
-      <div class="loc-chips">
-        <!-- Bangkok -->
-        <div class="loc-chip" data-region="bkk"><span class="loc-chip-name">Qottontale</span><span class="loc-chip-sub">Ploenchit · BKK</span></div>
-        <div class="loc-chip" data-region="bkk"><span class="loc-chip-name">Tictactoe</span><span class="loc-chip-sub">EMsphere · BKK</span></div>
-        <div class="loc-chip" data-region="bkk"><span class="loc-chip-name">Pin.bkk</span><span class="loc-chip-sub">Sukhumvit 31 · BKK</span></div>
-        <div class="loc-chip" data-region="bkk"><span class="loc-chip-name">Barber</span><span class="loc-chip-sub">Silom · BKK</span></div>
-        <div class="loc-chip" data-region="bkk"><span class="loc-chip-name">The Corner House</span><span class="loc-chip-sub">Charoenkrung · BKK</span></div>
-        <!-- Central -->
-        <div class="loc-chip" data-region="central"><span class="loc-chip-name">Saturday Cafe</span><span class="loc-chip-sub">นครปฐม</span></div>
-        <div class="loc-chip" data-region="central"><span class="loc-chip-name">Mosoyodia</span><span class="loc-chip-sub">พระนครศรีอยุธยา</span></div>
-        <div class="loc-chip" data-region="central"><span class="loc-chip-name">Coffee Please in the Garden</span><span class="loc-chip-sub">ราชบุรี</span></div>
-        <div class="loc-chip" data-region="central"><span class="loc-chip-name">DusitD2</span><span class="loc-chip-sub">เขาใหญ่</span></div>
-        <div class="loc-chip" data-region="central"><span class="loc-chip-name">180 All Day All Season</span><span class="loc-chip-sub">เขาค้อ</span></div>
-        <!-- East -->
-        <div class="loc-chip" data-region="east"><span class="loc-chip-name">Peeps Breakfast &amp; Bar</span><span class="loc-chip-sub">บางแสน · ชลบุรี</span></div>
-        <div class="loc-chip" data-region="east"><span class="loc-chip-name">Casa Tropika</span><span class="loc-chip-sub">บางแสน · ชลบุรี</span></div>
-        <div class="loc-chip" data-region="east"><span class="loc-chip-name">Casa Myka</span><span class="loc-chip-sub">พัทยา · ชลบุรี</span></div>
-        <div class="loc-chip" data-region="east"><span class="loc-chip-name">House of Benedict</span><span class="loc-chip-sub">พัทยา · ชลบุรี</span></div>
-        <!-- Northeast -->
-        <div class="loc-chip" data-region="northeast"><span class="loc-chip-name">Rusty</span><span class="loc-chip-sub">ขอนแก่น</span></div>
-        <div class="loc-chip" data-region="northeast"><span class="loc-chip-name">Ultra</span><span class="loc-chip-sub">ขอนแก่น</span></div>
-        <div class="loc-chip" data-region="northeast"><span class="loc-chip-name">Godfather</span><span class="loc-chip-sub">อุดรธานี</span></div>
-        <div class="loc-chip" data-region="northeast"><span class="loc-chip-name">Godfather</span><span class="loc-chip-sub">อุบลราชธานี</span></div>
-        <div class="loc-chip" data-region="northeast"><span class="loc-chip-name">Tempo</span><span class="loc-chip-sub">อุบลราชธานี</span></div>
-        <div class="loc-chip" data-region="northeast"><span class="loc-chip-name">Buriram United</span><span class="loc-chip-sub">บุรีรัมย์</span></div>
-        <!-- North -->
-        <div class="loc-chip" data-region="north"><span class="loc-chip-name">Fringe</span><span class="loc-chip-sub">เชียงใหม่</span></div>
-        <!-- South -->
-        <div class="loc-chip" data-region="south"><span class="loc-chip-name">Major Ocean</span><span class="loc-chip-sub">ชุมพร</span></div>
-        <div class="loc-chip" data-region="south"><span class="loc-chip-name">Nawa Cafe</span><span class="loc-chip-sub">ชุมพร</span></div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
 <!-- POLICY -->
 <section id="policy" style="border-top:1px solid #111;background:#050505;">
   <div class="sec-label">Policy</div>
@@ -570,31 +430,6 @@ footer{padding:48px 64px;border-top:1px solid #0a0a0a;display:flex;justify-conte
 </footer>
 
 <script>
-// Locations region filter
-document.querySelectorAll('.loc-filter').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.loc-filter').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const region = btn.dataset.region;
-    // Filter chips
-    document.querySelectorAll('.loc-chip').forEach(chip => {
-      if (region === 'all' || chip.dataset.region === region) {
-        chip.classList.remove('hidden');
-      } else {
-        chip.classList.add('hidden');
-      }
-    });
-    // Dim map dots
-    document.querySelectorAll('.loc-dot').forEach(dot => {
-      if (region === 'all' || dot.dataset.region === region) {
-        dot.classList.remove('dim');
-      } else {
-        dot.classList.add('dim');
-      }
-    });
-  });
-});
-
 // Active nav highlight on scroll
 const secs = document.querySelectorAll('section[id], div[id]');
 const links = document.querySelectorAll('.nav-links a');
