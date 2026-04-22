@@ -265,6 +265,56 @@ footer{padding:48px 64px;border-top:1px solid #0a0a0a;display:flex;justify-conte
 .logo-item.cc img{filter:grayscale(1) brightness(1.6);opacity:.22;mix-blend-mode:screen;}
 .logo-item.cc:hover img{filter:none;opacity:1;mix-blend-mode:normal;transform:scale(1.06);}
 @media(max-width:900px){.clients-header{padding:0 24px;}.logo-item{padding:0 32px;}}
+
+/* ─── GALLERY ─── */
+#gallery{padding:100px 0;border-top:1px solid #0f0f0f;overflow:hidden;}
+.gallery-header{padding:0 64px;margin-bottom:64px;}
+@keyframes scrollRight{from{transform:translateX(-50%);}to{transform:translateX(0);}}
+.gal-strip-wrap{
+  width:100%;
+  mask-image:linear-gradient(to right,transparent 0%,black 7%,black 93%,transparent 100%);
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,black 7%,black 93%,transparent 100%);
+}
+.gal-strip-wrap+.gal-strip-wrap{margin-top:4px;}
+.gal-strip-track{display:flex;width:max-content;animation:scrollLeft 32s linear infinite;}
+.gal-strip-track.rev{animation:scrollRight 38s linear infinite;}
+.gal-strip-wrap:hover .gal-strip-track{animation-play-state:paused;}
+.gal-item{flex-shrink:0;height:220px;width:320px;overflow:hidden;margin-right:4px;}
+.gal-item img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:grayscale(1);
+  transition:filter .5s cubic-bezier(.4,0,.2,1),transform .45s cubic-bezier(.4,0,.2,1);
+  cursor:pointer;
+}
+.gal-item:hover img{filter:grayscale(0);transform:scale(1.05);}
+/* lightbox */
+.gal-lightbox{
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(0,0,0,.96);
+  align-items:center;justify-content:center;
+  cursor:pointer;
+}
+.gal-lightbox.open{display:flex;}
+.gal-lightbox img{
+  max-width:92vw;max-height:90vh;object-fit:contain;display:block;
+  animation:lbFadeIn .3s ease;
+}
+@keyframes lbFadeIn{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);}}
+.gal-lb-close{
+  position:absolute;top:24px;right:32px;
+  font-size:1.5rem;color:#fff;opacity:.4;cursor:pointer;
+  background:none;border:none;transition:opacity .2s;line-height:1;font-family:inherit;
+}
+.gal-lb-close:hover{opacity:1;}
+.gal-lb-esc{
+  position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+  font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;
+  color:#fff;opacity:.16;pointer-events:none;
+}
+@media(max-width:900px){
+  .gallery-header{padding:0 24px;}
+  .gal-item{height:160px;width:240px;}
+}
 </style>
 </head>
 <body>
@@ -692,6 +742,70 @@ footer{padding:48px 64px;border-top:1px solid #0a0a0a;display:flex;justify-conte
   </div>
 </section>
 
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="gallery-header reveal">
+    <div class="sec-label">Previous Events</div>
+    <h2 class="sec-title">Moments We've <span>Created</span></h2>
+  </div>
+
+  <!-- Strip 1 → scrolls left -->
+  <div class="gal-strip-wrap">
+    <div class="gal-strip-track">
+      <!-- SET 1 -->
+      <div class="gal-item"><img src="gallery/DSCF2769.jpg" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_1994.JPG" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_1996.JPG" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_2643.JPG" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/DSCF2776.JPG" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/DSCF2856.JPG" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_3006.JPG" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/DSCF3172.jpg" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/DSCF3108.jpg" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_3419.JPG" alt="Event photo"/></div>
+      <!-- SET 2 — duplicate for seamless loop -->
+      <div class="gal-item"><img src="gallery/DSCF2769.jpg" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_1994.JPG" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_1996.JPG" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_2643.JPG" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/DSCF2776.JPG" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/DSCF2856.JPG" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_3006.JPG" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/DSCF3172.jpg" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/DSCF3108.jpg" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_3419.JPG" alt="Event photo"/></div>
+    </div>
+  </div>
+
+  <!-- Strip 2 → scrolls right -->
+  <div class="gal-strip-wrap">
+    <div class="gal-strip-track rev">
+      <!-- SET 1 -->
+      <div class="gal-item"><img src="gallery/DSCF3123.jpg" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_3100.JPG" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_8120.JPG" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/LINE_ALBUM_Milan_260413_9.jpg" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/LINE_ALBUM_Milan_260413_29.jpg" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/LINE_ALBUM_Milan_260413_40.jpg" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_3415.jpg" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_3420.jpg" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_8152.JPG" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_3414.jpg" alt="Event photo"/></div>
+      <!-- SET 2 — duplicate for seamless loop -->
+      <div class="gal-item"><img src="gallery/DSCF3123.jpg" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_3100.JPG" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_8120.JPG" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/LINE_ALBUM_Milan_260413_9.jpg" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/LINE_ALBUM_Milan_260413_29.jpg" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/LINE_ALBUM_Milan_260413_40.jpg" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_3415.jpg" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_3420.jpg" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_8152.JPG" alt="Event photo"/></div>
+      <div class="gal-item"><img src="gallery/IMG_3414.jpg" alt="Event photo"/></div>
+    </div>
+  </div>
+</section>
+
 <!-- CONTACT -->
 <section id="contact">
   <div class="reveal">
@@ -746,6 +860,13 @@ footer{padding:48px 64px;border-top:1px solid #0a0a0a;display:flex;justify-conte
     <a href="mailto:flashyourmeme@gmail.com">Email</a>
   </div>
 </footer>
+
+<!-- GALLERY LIGHTBOX -->
+<div class="gal-lightbox" id="galLightbox">
+  <button class="gal-lb-close" id="galLbClose">✕</button>
+  <img id="galLbImg" src="" alt=""/>
+  <p class="gal-lb-esc">press esc or click to close</p>
+</div>
 
 <script>
 // Hamburger menu
@@ -807,6 +928,18 @@ if(locMapEl){
   }, { threshold: 0.4 });
   locObs.observe(locMapEl);
 }
+
+// Gallery lightbox
+const galLb    = document.getElementById('galLightbox');
+const galLbImg = document.getElementById('galLbImg');
+function openGalLb(src){ galLbImg.src = src; galLb.classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeGalLb(){ galLb.classList.remove('open'); document.body.style.overflow = ''; }
+document.querySelectorAll('.gal-item img').forEach(img => {
+  img.addEventListener('click', e => { e.stopPropagation(); openGalLb(img.src); });
+});
+galLb.addEventListener('click', closeGalLb);
+document.getElementById('galLbClose').addEventListener('click', e => { e.stopPropagation(); closeGalLb(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeGalLb(); });
 
 // Active nav highlight on scroll
 const secs = document.querySelectorAll('section[id], div[id]');
