@@ -23,6 +23,35 @@ nav{position:fixed;top:0;left:0;right:0;z-index:999;display:flex;justify-content
 .nav-cta{background:#fff;color:#000!important;padding:9px 22px;font-size:.72rem!important;font-weight:700;letter-spacing:.12em!important;}
 .nav-cta:hover{background:#ddd!important;}
 
+/* ─── HAMBURGER ─── */
+.nav-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;cursor:pointer;background:none;border:none;padding:4px;z-index:1001;}
+.nav-hamburger span{display:block;width:22px;height:1.5px;background:#fff;transition:transform .3s ease,opacity .3s ease;}
+.nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.nav-hamburger.open span:nth-child(2){opacity:0;}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+
+/* ─── MOBILE MENU OVERLAY ─── */
+.nav-mobile-overlay{
+  display:none;position:fixed;inset:0;z-index:1000;
+  background:rgba(0,0,0,.97);
+  flex-direction:column;justify-content:center;align-items:center;gap:0;
+  opacity:0;transition:opacity .3s ease;
+}
+.nav-mobile-overlay.open{display:flex;opacity:1;}
+.nav-mobile-overlay ul{list-style:none;text-align:center;display:flex;flex-direction:column;gap:0;width:100%;}
+.nav-mobile-overlay ul li a{
+  display:block;padding:20px 32px;
+  font-family:'DM Sans',sans-serif;font-size:1.6rem;font-weight:900;
+  letter-spacing:-.02em;text-transform:uppercase;text-decoration:none;
+  color:#222;transition:color .2s;border-bottom:1px solid #0f0f0f;
+}
+.nav-mobile-overlay ul li a:hover{color:#fff;}
+.nav-mobile-overlay .nav-mobile-cta{
+  margin-top:32px;display:inline-block;
+  background:#fff;color:#000;padding:16px 48px;
+  font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;
+}
+
 /* ─── HERO ─── */
 #home{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 64px 100px;position:relative;overflow:hidden;}
 .hero-bg{position:absolute;inset:0;background:url('hero-bg.jpg') center center / cover no-repeat;z-index:0;}
@@ -113,8 +142,17 @@ footer{padding:48px 64px;border-top:1px solid #0a0a0a;display:flex;justify-conte
 /* ─── RESPONSIVE ─── */
 @media(max-width:900px){
   nav{padding:16px 24px;}
-  #home{padding:0 24px 80px;}
+  .nav-links{display:none;}
+  .nav-hamburger{display:flex;}
+  #home{padding:0 24px 72px;min-height:100svh;}
+  .hero-tag{margin-bottom:20px;font-size:.6rem;}
+  .hero-h1{font-size:clamp(3.2rem,12vw,6rem);}
+  .hero-sub{margin-top:24px;}
+  .hero-sub p{font-size:.88rem;}
+  .hero-actions{margin-top:32px;flex-direction:column;align-items:flex-start;gap:16px;}
+  .btn-primary{width:100%;text-align:center;padding:16px 24px;}
   .hero-stats{display:none;}
+  .hero-scroll{display:none;}
   section{padding:72px 24px;}
   #about{flex-direction:column;padding:48px 24px;gap:32px;}
   .about-stats{gap:32px;}
@@ -124,8 +162,11 @@ footer{padding:48px 64px;border-top:1px solid #0a0a0a;display:flex;justify-conte
   footer{flex-direction:column;gap:16px;text-align:center;padding:40px 24px;}
 }
 @media(max-width:500px){
+  nav{padding:14px 20px;}
   .process-steps{grid-template-columns:1fr;}
-  .hero-h1{font-size:clamp(3rem,14vw,5rem);}
+  .hero-h1{font-size:clamp(2.8rem,13vw,4.5rem);}
+  .hero-actions{gap:12px;}
+  section{padding:60px 20px;}
 }
 
 /* ─── C1: HERO LIGHT STREAKS ─── */
@@ -235,7 +276,22 @@ footer{padding:48px 64px;border-top:1px solid #0a0a0a;display:flex;justify-conte
     <li><a href="#contact">ติดต่อ</a></li>
     <li><a href="#contact" class="nav-cta">จองเลย</a></li>
   </ul>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE MENU OVERLAY -->
+<div class="nav-mobile-overlay" id="navOverlay">
+  <ul>
+    <li><a href="#home" class="nav-mobile-link">Home</a></li>
+    <li><a href="#our-services" class="nav-mobile-link">Services</a></li>
+    <li><a href="#locations" class="nav-mobile-link">Locations</a></li>
+    <li><a href="#policy" class="nav-mobile-link">นโยบาย</a></li>
+    <li><a href="#contact" class="nav-mobile-link">ติดต่อ</a></li>
+  </ul>
+  <a href="#contact" class="nav-mobile-cta nav-mobile-link">จองเลย</a>
+</div>
 
 <!-- HERO -->
 <section id="home">
@@ -686,6 +742,25 @@ footer{padding:48px 64px;border-top:1px solid #0a0a0a;display:flex;justify-conte
 </footer>
 
 <script>
+// Hamburger menu
+const hamburger  = document.getElementById('navHamburger');
+const overlay    = document.getElementById('navOverlay');
+const mobileLinks = document.querySelectorAll('.nav-mobile-link');
+function toggleMenu(forceClose){
+  const isOpen = overlay.classList.contains('open');
+  if(forceClose || isOpen){
+    overlay.classList.remove('open');
+    hamburger.classList.remove('open');
+    document.body.style.overflow = '';
+  } else {
+    overlay.classList.add('open');
+    hamburger.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+}
+hamburger.addEventListener('click', () => toggleMenu(false));
+mobileLinks.forEach(l => l.addEventListener('click', () => toggleMenu(true)));
+
 // C2: Scroll Reveal — IntersectionObserver
 const revealEls = document.querySelectorAll('.reveal');
 const revealObs = new IntersectionObserver((entries) => {
