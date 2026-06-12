@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Gallery Options — FLASHYOURMEME Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,700;0,9..40,900;1,9..40,300&family=Prompt:wght@300;400;600&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#000;color:#fff;font-family:'Prompt',sans-serif;}
+
+/* ── STICKY NAV ── */
+.pnav{
+  position:sticky;top:0;z-index:500;
+  background:rgba(0,0,0,.92);backdrop-filter:blur(16px);
+  border-bottom:1px solid #1a1a1a;
+  padding:12px 40px;
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+}
+.pnav-label{
+  font-size:.58rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:#fff;opacity:.28;margin-right:12px;white-space:nowrap;
+}
+.pnav a{
+  font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;color:#fff;opacity:.38;text-decoration:none;
+  padding:5px 13px;border:1px solid #222;border-radius:40px;white-space:nowrap;
+  transition:opacity .2s,border-color .2s,background .2s;
+}
+.pnav a:hover{opacity:1;border-color:#555;background:#111;}
+.pnav .star{border-color:#444;opacity:.7;}
+.pnav .star:hover{background:#181818;opacity:1;border-color:#888;}
+
+/* ── OPTION SECTION ── */
+.opt-section{padding:80px 0 90px;border-top:1px solid #0d0d0d;}
+.opt-header{padding:0 64px;margin-bottom:48px;}
+.opt-badge{
+  display:flex;align-items:center;gap:10px;
+  font-size:.58rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;
+  color:#fff;opacity:.22;margin-bottom:14px;
+}
+.opt-badge::before{content:'';width:28px;height:1px;background:currentColor;}
+.opt-name{
+  font-family:'DM Sans',sans-serif;
+  font-size:clamp(2rem,4vw,3rem);font-weight:900;
+  line-height:.95;letter-spacing:-.03em;text-transform:uppercase;margin-bottom:14px;
+}
+.opt-name em{font-style:italic;font-weight:300;}
+.opt-meta{display:flex;gap:20px;flex-wrap:wrap;font-size:.7rem;opacity:.32;letter-spacing:.03em;}
+.opt-meta strong{opacity:.8;}
+.rec-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:#fff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  padding:4px 12px;border-radius:4px;margin-top:14px;
+}
+
+/* ══════════════════════════════════════
+   OPTION 1 — Dense Mosaic
+══════════════════════════════════════ */
+#opt1 .mosaic{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  grid-auto-rows:170px;
+  grid-auto-flow:dense;
+  gap:3px;
+}
+#opt1 .mosaic .m-cell{overflow:hidden;}
+#opt1 .mosaic .m-cell img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:grayscale(1);
+  transition:filter .5s cubic-bezier(.4,0,.2,1),transform .45s cubic-bezier(.4,0,.2,1);
+  cursor:pointer;
+}
+#opt1 .mosaic .m-cell:hover img{filter:grayscale(0);transform:scale(1.05);}
+.mc-w2{grid-column:span 2;}
+.mc-t2{grid-row:span 2;}
+.mc-b22{grid-column:span 2;grid-row:span 2;}
+.mc-w3{grid-column:span 3;}
+
+/* ══════════════════════════════════════
+   OPTION 2 — Dual Film Strip
+══════════════════════════════════════ */
+#opt2 .strip-outer{
+  mask-image:linear-gradient(to right,transparent 0%,#000 6%,#000 94%,transparent 100%);
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 6%,#000 94%,transparent 100%);
+}
+#opt2 .strip-outer+.strip-outer{margin-top:4px;}
+#opt2 .strip-track{
+  display:flex;width:max-content;
+  animation:sLeft 30s linear infinite;
+}
+#opt2 .strip-track.rev{animation:sRight 36s linear infinite;}
+#opt2 .strip-outer:hover .strip-track{animation-play-state:paused;}
+@keyframes sLeft{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+@keyframes sRight{from{transform:translateX(-50%);}to{transform:translateX(0);}}
+#opt2 .strip-item{
+  flex-shrink:0;height:210px;width:310px;
+  overflow:hidden;margin-right:4px;
+}
+#opt2 .strip-item img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:grayscale(1);
+  transition:filter .5s ease,transform .4s ease;cursor:pointer;
+}
+#opt2 .strip-item:hover img{filter:grayscale(0);transform:scale(1.05);}
+
+/* ══════════════════════════════════════
+   OPTION 3 — Masonry + Hero Spotlight
+══════════════════════════════════════ */
+#opt3 .ms-layout{
+  display:grid;
+  grid-template-columns:300px 1fr;
+  gap:4px;
+  padding:0 64px;
+  align-items:start;
+}
+#opt3 .ms-hero-col{position:sticky;top:72px;}
+#opt3 .ms-hero{
+  width:100%;height:520px;object-fit:cover;display:block;
+  transition:filter .5s ease,opacity .4s ease;cursor:pointer;
+}
+#opt3 .ms-hero.bw{filter:grayscale(1);}
+#opt3 .ms-grid{
+  columns:3;column-gap:4px;
+}
+#opt3 .ms-item{break-inside:avoid;margin-bottom:4px;overflow:hidden;cursor:pointer;}
+#opt3 .ms-item img{
+  width:100%;display:block;
+  filter:grayscale(1);
+  transition:filter .5s ease,transform .4s ease;
+}
+#opt3 .ms-item:hover img{filter:grayscale(0);transform:scale(1.04);}
+
+/* ══════════════════════════════════════
+   OPTION 4 — Event Rows
+══════════════════════════════════════ */
+#opt4 .ev-rows{padding:0 64px;}
+#opt4 .ev-row{
+  display:grid;
+  grid-template-columns:160px 1fr;
+  align-items:center;
+  border-top:1px solid #111;
+  padding:24px 0;
+  gap:24px;
+  transition:border-color .3s;
+}
+#opt4 .ev-row:last-child{border-bottom:1px solid #111;}
+#opt4 .ev-label{
+  font-size:.62rem;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:#fff;opacity:.28;line-height:1.7;
+  transition:opacity .3s;
+}
+#opt4 .ev-row:hover .ev-label{opacity:.7;}
+#opt4 .ev-strip{
+  display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;
+}
+#opt4 .ev-strip::-webkit-scrollbar{display:none;}
+#opt4 .ev-cell{flex-shrink:0;height:190px;width:280px;overflow:hidden;cursor:pointer;}
+#opt4 .ev-cell img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:grayscale(1);transition:filter .5s ease,transform .4s ease;
+}
+#opt4 .ev-row:hover .ev-cell img{filter:grayscale(0);}
+#opt4 .ev-cell:hover img{transform:scale(1.04);}
+
+/* ══════════════════════════════════════
+   OPTION 5 — Cinematic Letterbox
+══════════════════════════════════════ */
+#opt5 .lb-wrap{padding:0 64px;position:relative;}
+#opt5 .lb-track{
+  display:flex;gap:6px;overflow-x:auto;
+  scrollbar-width:none;cursor:grab;
+  mask-image:linear-gradient(to right,transparent 0%,#000 3%,#000 97%,transparent 100%);
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 3%,#000 97%,transparent 100%);
+}
+#opt5 .lb-track:active{cursor:grabbing;}
+#opt5 .lb-track::-webkit-scrollbar{display:none;}
+#opt5 .lb-item{flex-shrink:0;height:320px;overflow:hidden;cursor:pointer;position:relative;}
+#opt5 .lb-item.land{width:480px;}
+#opt5 .lb-item.port{width:215px;}
+#opt5 .lb-item img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:grayscale(1);
+  transition:filter .5s ease,transform .45s ease,opacity .4s ease;
+}
+/* spotlight: dim others, highlight hovered */
+#opt5 .lb-track:hover .lb-item img{opacity:.2;filter:grayscale(1);}
+#opt5 .lb-track .lb-item:hover img{filter:grayscale(0);opacity:1;transform:scale(1.03);}
+#opt5 .drag-hint{
+  text-align:center;margin-top:18px;
+  font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;
+  color:#fff;opacity:.18;
+}
+
+/* ══════════════════════════════════════
+   OPTION 6 — Asymmetric Collage ★
+══════════════════════════════════════ */
+#opt6 .collage{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  grid-auto-rows:160px;
+  grid-auto-flow:dense;
+  gap:6px;
+  padding:0 64px;
+}
+.cc{
+  cursor:pointer;
+  overflow:hidden;
+  box-shadow:0 6px 24px rgba(0,0,0,.55);
+  transition:
+    transform .55s cubic-bezier(.34,1.3,.64,1),
+    box-shadow .4s ease,
+    opacity .35s ease;
+  position:relative;z-index:1;
+}
+.cc img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:grayscale(1);
+  transition:filter .55s ease,transform .55s cubic-bezier(.34,1.3,.64,1);
+}
+/* Rotation variants */
+.rl1{transform:rotate(-1.6deg);}
+.rr1{transform:rotate(1.2deg);}
+.rl2{transform:rotate(-0.7deg);}
+.rr2{transform:rotate(2.1deg);}
+.rl3{transform:rotate(-1.1deg);}
+.rr3{transform:rotate(0.8deg);}
+/* Cell sizes */
+.cc2c2r{grid-column:span 2;grid-row:span 2;}
+.cc2c1r{grid-column:span 2;grid-row:span 1;}
+.cc1c2r{grid-column:span 1;grid-row:span 2;}
+.cc3c1r{grid-column:span 3;grid-row:span 1;}
+.cc1c1r{grid-column:span 1;grid-row:span 1;}
+
+/* Hover: straighten + color + lift */
+.cc:hover{
+  transform:rotate(0deg) scale(1.05)!important;
+  z-index:20;
+  box-shadow:0 16px 56px rgba(0,0,0,.75);
+}
+.cc:hover img{filter:grayscale(0);}
+/* Dim others on collage hover */
+#opt6 .collage:hover .cc{opacity:.22;}
+#opt6 .collage .cc:hover{opacity:1;}
+
+/* section title common */
+.sec-label-small{
+  font-size:.58rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;
+  color:#fff;opacity:.22;display:flex;align-items:center;gap:12px;margin-bottom:12px;
+}
+.sec-label-small::before{content:'';width:28px;height:1px;background:currentColor;}
+.sec-title-big{
+  font-family:'DM Sans',sans-serif;
+  font-size:clamp(2.4rem,5vw,4rem);
+  font-weight:900;line-height:.95;letter-spacing:-.03em;text-transform:uppercase;
+}
+.sec-title-big em{font-style:italic;font-weight:300;}
+
+/* ══════════════════════════════════════
+   LIGHTBOX
+══════════════════════════════════════ */
+.lbox{
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(0,0,0,.96);
+  align-items:center;justify-content:center;cursor:pointer;
+}
+.lbox.open{display:flex;}
+.lbox img{
+  max-width:92vw;max-height:90vh;object-fit:contain;
+  filter:none!important;
+  animation:lbIn .3s ease;display:block;
+}
+@keyframes lbIn{from{opacity:0;transform:scale(.94);}to{opacity:1;transform:scale(1);}}
+.lbox-close{
+  position:absolute;top:22px;right:28px;
+  font-size:1.6rem;color:#fff;opacity:.4;cursor:pointer;
+  background:none;border:none;font-family:inherit;
+  transition:opacity .2s;line-height:1;
+}
+.lbox-close:hover{opacity:1;}
+.lbox-hint{
+  position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+  font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:#fff;opacity:.18;
+}
+</style>
+</head>
+<body>
+
+<!-- STICKY NAV -->
+<div class="pnav">
+  <span class="pnav-label">Gallery Preview</span>
+  <a href="#opt1">1 · Mosaic</a>
+  <a href="#opt2">2 · Film Strip</a>
+  <a href="#opt3">3 · Masonry+Hero</a>
+  <a href="#opt4">4 · Event Rows</a>
+  <a href="#opt5">5 · Letterbox</a>
+  <a href="#opt6" class="star">6 · Collage ★ rec.</a>
+</div>
+
+<!-- ════════════════════════════════════════
+     OPTION 1 — Dense Mosaic
+════════════════════════════════════════ -->
+<section id="opt1" class="opt-section">
+  <div class="opt-header">
+    <div class="opt-badge">Option 01</div>
+    <h2 class="opt-name">Dense <em>Mosaic</em> Grid</h2>
+    <div class="opt-meta">
+      <span>Layout: 6-col fixed grid · varied cell spans</span>
+      <span>Hover: grayscale → color + scale</span>
+      <span><strong>Density: Very High · 12 imgs visible</strong></span>
+      <span>Complexity: Medium</span>
+    </div>
+  </div>
+  <div class="mosaic">
+    <div class="m-cell mc-b22"><img src="https://picsum.photos/seed/fx1/800/600" alt="" loading="lazy"/></div>
+    <div class="m-cell"><img src="https://picsum.photos/seed/fx2/400/300" alt="" loading="lazy"/></div>
+    <div class="m-cell"><img src="https://picsum.photos/seed/fx3/400/300" alt="" loading="lazy"/></div>
+    <div class="m-cell mc-w2"><img src="https://picsum.photos/seed/fx4/800/300" alt="" loading="lazy"/></div>
+    <div class="m-cell"><img src="https://picsum.photos/seed/fx5/400/300" alt="" loading="lazy"/></div>
+    <div class="m-cell"><img src="https://picsum.photos/seed/fx6/400/300" alt="" loading="lazy"/></div>
+    <div class="m-cell mc-w2"><img src="https://picsum.photos/seed/fx7/800/300" alt="" loading="lazy"/></div>
+    <div class="m-cell mc-w3"><img src="https://picsum.photos/seed/fx8/1200/300" alt="" loading="lazy"/></div>
+    <div class="m-cell mc-t2"><img src="https://picsum.photos/seed/fx9/400/600" alt="" loading="lazy"/></div>
+    <div class="m-cell mc-b22"><img src="https://picsum.photos/seed/fx10/800/600" alt="" loading="lazy"/></div>
+    <div class="m-cell mc-w2"><img src="https://picsum.photos/seed/fx11/800/300" alt="" loading="lazy"/></div>
+    <div class="m-cell"><img src="https://picsum.photos/seed/fx12/400/300" alt="" loading="lazy"/></div>
+    <div class="m-cell"><img src="https://picsum.photos/seed/fx13/400/300" alt="" loading="lazy"/></div>
+    <div class="m-cell mc-w3"><img src="https://picsum.photos/seed/fx14/1200/300" alt="" loading="lazy"/></div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     OPTION 2 — Dual Film Strip
+════════════════════════════════════════ -->
+<section id="opt2" class="opt-section">
+  <div class="opt-header">
+    <div class="opt-badge">Option 02</div>
+    <h2 class="opt-name">Dual <em>Film Strip</em></h2>
+    <div class="opt-meta">
+      <span>Layout: 2 auto-scroll rows · opposite directions</span>
+      <span>Hover: strip pauses · grayscale → color</span>
+      <span><strong>Density: Extreme · 16+ imgs · smallest height</strong></span>
+      <span>Complexity: Low</span>
+    </div>
+  </div>
+  <!-- Strip 1 → left -->
+  <div class="strip-outer">
+    <div class="strip-track">
+      <div class="strip-item"><img src="https://picsum.photos/seed/s1/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s2/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s3/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s4/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s5/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s6/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s7/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s8/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s9/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s10/600/400" alt="" loading="lazy"/></div>
+      <!-- duplicate for seamless loop -->
+      <div class="strip-item"><img src="https://picsum.photos/seed/s1/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s2/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s3/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s4/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s5/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s6/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s7/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s8/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s9/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s10/600/400" alt="" loading="lazy"/></div>
+    </div>
+  </div>
+  <!-- Strip 2 → right -->
+  <div class="strip-outer">
+    <div class="strip-track rev">
+      <div class="strip-item"><img src="https://picsum.photos/seed/s11/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s12/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s13/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s14/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s15/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s16/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s17/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s18/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s19/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s20/600/400" alt="" loading="lazy"/></div>
+      <!-- duplicate -->
+      <div class="strip-item"><img src="https://picsum.photos/seed/s11/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s12/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s13/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s14/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s15/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s16/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s17/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s18/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s19/600/400" alt="" loading="lazy"/></div>
+      <div class="strip-item"><img src="https://picsum.photos/seed/s20/600/400" alt="" loading="lazy"/></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     OPTION 3 — Masonry + Hero Spotlight
+════════════════════════════════════════ -->
+<section id="opt3" class="opt-section">
+  <div class="opt-header">
+    <div class="opt-badge">Option 03</div>
+    <h2 class="opt-name">Masonry <em>+ Hero</em> Spotlight</h2>
+    <div class="opt-meta">
+      <span>Layout: sticky hero left · masonry right</span>
+      <span>Hover thumbnail: hero crossfades to full image</span>
+      <span><strong>Feel: editorial, lookbook</strong></span>
+      <span>Complexity: Medium</span>
+    </div>
+  </div>
+  <div class="ms-layout">
+    <div class="ms-hero-col">
+      <img id="heroImg" class="ms-hero bw" src="https://picsum.photos/seed/m1/600/800" alt="" loading="lazy"/>
+    </div>
+    <div class="ms-grid">
+      <div class="ms-item"><img src="https://picsum.photos/seed/m1/600/400" alt="" loading="lazy"/></div>
+      <div class="ms-item"><img src="https://picsum.photos/seed/m2/600/800" alt="" loading="lazy"/></div>
+      <div class="ms-item"><img src="https://picsum.photos/seed/m3/600/400" alt="" loading="lazy"/></div>
+      <div class="ms-item"><img src="https://picsum.photos/seed/m4/600/700" alt="" loading="lazy"/></div>
+      <div class="ms-item"><img src="https://picsum.photos/seed/m5/600/400" alt="" loading="lazy"/></div>
+      <div class="ms-item"><img src="https://picsum.photos/seed/m6/600/600" alt="" loading="lazy"/></div>
+      <div class="ms-item"><img src="https://picsum.photos/seed/m7/600/400" alt="" loading="lazy"/></div>
+      <div class="ms-item"><img src="https://picsum.photos/seed/m8/600/500" alt="" loading="lazy"/></div>
+      <div class="ms-item"><img src="https://picsum.photos/seed/m9/600/400" alt="" loading="lazy"/></div>
+      <div class="ms-item"><img src="https://picsum.photos/seed/m10/600/700" alt="" loading="lazy"/></div>
+      <div class="ms-item"><img src="https://picsum.photos/seed/m11/600/400" alt="" loading="lazy"/></div>
+      <div class="ms-item"><img src="https://picsum.photos/seed/m12/600/450" alt="" loading="lazy"/></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     OPTION 4 — Event Rows
+════════════════════════════════════════ -->
+<section id="opt4" class="opt-section">
+  <div class="opt-header">
+    <div class="opt-badge">Option 04</div>
+    <h2 class="opt-name">Event <em>Rows</em></h2>
+    <div class="opt-meta">
+      <span>Layout: labeled rows · horizontal scroll per row</span>
+      <span>Hover row: entire row goes color</span>
+      <span><strong>Feel: organized, Netflix-style</strong></span>
+      <span>Complexity: Medium</span>
+    </div>
+  </div>
+  <div class="ev-rows">
+    <div class="ev-row">
+      <div class="ev-label">Bangkok<br/>Events</div>
+      <div class="ev-strip">
+        <div class="ev-cell"><img src="https://picsum.photos/seed/e1/560/380" alt="" loading="lazy"/></div>
+        <div class="ev-cell"><img src="https://picsum.photos/seed/e2/560/380" alt="" loading="lazy"/></div>
+        <div class="ev-cell"><img src="https://picsum.photos/seed/e3/560/380" alt="" loading="lazy"/></div>
+        <div class="ev-cell"><img src="https://picsum.photos/seed/e4/560/380" alt="" loading="lazy"/></div>
+        <div class="ev-cell"><img src="https://picsum.photos/seed/e5/560/380" alt="" loading="lazy"/></div>
+        <div class="ev-cell"><img src="https://picsum.photos/seed/e6/560/380" alt="" loading="lazy"/></div>
+      </div>
+    </div>
+    <div class="ev-row">
+      <div class="ev-label">Central<br/>Region</div>
+      <div class="ev-strip">
+        <div class="ev-cell"><img src="https://picsum.photos/seed/e7/560/380" alt="" loading="lazy"/></div>
+        <div class="ev-cell"><img src="https://picsum.photos/seed/e8/560/380" alt="" loading="lazy"/></div>
+        <div class="ev-cell"><img src="https://picsum.photos/seed/e9/560/380" alt="" loading="lazy"/></div>
+        <div class="ev-cell"><img src="https://picsum.photos/seed/e10/560/380" alt="" loading="lazy"/></div>
+        <div class="ev-cell"><img src="https://picsum.photos/seed/e11/560/380" alt="" loading="lazy"/></div>
+        <div class="ev-cell"><img src="https://picsum.photos/seed/e12/560/380" alt="" loading="lazy"/></div>
+      </div>
+    </div>
+    <div class="ev-row">
+      <div class="ev-label">South &amp;<br/>Northeast</div>
+      <div class="ev-strip">
+        <div class="ev-cell"><img src="https://picsum.photos/seed/e13/560/380" alt="" loading="lazy"/></div>
+        <div class="ev-cell"><img src="https://picsum.photos/seed/e14/560/380" alt="" loading="lazy"/></div>
+        <div class="ev-cell"><img src="https://picsum.photos/seed/e15/560/380" alt="" loading="lazy"/></div>
+        <div class="ev-cell"><img src="https://picsum.photos/seed/e16/560/380" alt="" loading="lazy"/></div>
+        <div class="ev-cell"><img src="https://picsum.photos/seed/e17/560/380" alt="" loading="lazy"/></div>
+        <div class="ev-cell"><img src="https://picsum.photos/seed/e18/560/380" alt="" loading="lazy"/></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     OPTION 5 — Cinematic Letterbox
+════════════════════════════════════════ -->
+<section id="opt5" class="opt-section">
+  <div class="opt-header">
+    <div class="opt-badge">Option 05</div>
+    <h2 class="opt-name">Cinematic <em>Letterbox</em></h2>
+    <div class="opt-meta">
+      <span>Layout: single draggable wide strip</span>
+      <span>Hover: spotlight — others dim, hovered goes color</span>
+      <span><strong>Feel: premium cinema, physical drag</strong></span>
+      <span>Complexity: Medium</span>
+    </div>
+  </div>
+  <div class="lb-wrap">
+    <div class="lb-track" id="lbTrack">
+      <div class="lb-item land"><img src="https://picsum.photos/seed/lb1/960/640" alt="" loading="lazy"/></div>
+      <div class="lb-item port"><img src="https://picsum.photos/seed/lb2/430/640" alt="" loading="lazy"/></div>
+      <div class="lb-item land"><img src="https://picsum.photos/seed/lb3/960/640" alt="" loading="lazy"/></div>
+      <div class="lb-item land"><img src="https://picsum.photos/seed/lb4/960/640" alt="" loading="lazy"/></div>
+      <div class="lb-item port"><img src="https://picsum.photos/seed/lb5/430/640" alt="" loading="lazy"/></div>
+      <div class="lb-item land"><img src="https://picsum.photos/seed/lb6/960/640" alt="" loading="lazy"/></div>
+      <div class="lb-item port"><img src="https://picsum.photos/seed/lb7/430/640" alt="" loading="lazy"/></div>
+      <div class="lb-item land"><img src="https://picsum.photos/seed/lb8/960/640" alt="" loading="lazy"/></div>
+      <div class="lb-item land"><img src="https://picsum.photos/seed/lb9/960/640" alt="" loading="lazy"/></div>
+      <div class="lb-item port"><img src="https://picsum.photos/seed/lb10/430/640" alt="" loading="lazy"/></div>
+      <div class="lb-item land"><img src="https://picsum.photos/seed/lb11/960/640" alt="" loading="lazy"/></div>
+      <div class="lb-item land"><img src="https://picsum.photos/seed/lb12/960/640" alt="" loading="lazy"/></div>
+    </div>
+    <p class="drag-hint">← drag to explore →</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     OPTION 6 — Asymmetric Collage ★
+════════════════════════════════════════ -->
+<section id="opt6" class="opt-section">
+  <div class="opt-header">
+    <div class="opt-badge">Option 06</div>
+    <h2 class="opt-name">Asymmetric <em>Collage</em></h2>
+    <div class="opt-meta">
+      <span>Layout: varied grid spans · subtle rotation offsets</span>
+      <span>Hover: rotation snaps to 0° + color + lift · others dim</span>
+      <span><strong>Feel: polaroid table · signature interaction</strong></span>
+      <span>Complexity: Medium</span>
+    </div>
+    <div class="rec-badge">★ Recommended for FLASHYOURMEME</div>
+  </div>
+  <div class="collage">
+    <div class="cc cc2c2r rl1"><img src="https://picsum.photos/seed/c1/800/800" alt="" loading="lazy"/></div>
+    <div class="cc cc1c1r rr1"><img src="https://picsum.photos/seed/c2/400/400" alt="" loading="lazy"/></div>
+    <div class="cc cc2c1r rl2"><img src="https://picsum.photos/seed/c3/800/400" alt="" loading="lazy"/></div>
+    <div class="cc cc1c1r rr2"><img src="https://picsum.photos/seed/c4/400/400" alt="" loading="lazy"/></div>
+    <div class="cc cc1c2r rl3"><img src="https://picsum.photos/seed/c5/400/800" alt="" loading="lazy"/></div>
+    <div class="cc cc1c1r rr1"><img src="https://picsum.photos/seed/c6/400/400" alt="" loading="lazy"/></div>
+    <div class="cc cc1c1r rl1"><img src="https://picsum.photos/seed/c7/400/400" alt="" loading="lazy"/></div>
+    <div class="cc cc2c1r rr3"><img src="https://picsum.photos/seed/c8/800/400" alt="" loading="lazy"/></div>
+    <div class="cc cc1c1r rl2"><img src="https://picsum.photos/seed/c9/400/400" alt="" loading="lazy"/></div>
+    <div class="cc cc2c2r rr2"><img src="https://picsum.photos/seed/c10/800/800" alt="" loading="lazy"/></div>
+    <div class="cc cc1c1r rl3"><img src="https://picsum.photos/seed/c11/400/400" alt="" loading="lazy"/></div>
+    <div class="cc cc1c1r rr1"><img src="https://picsum.photos/seed/c12/400/400" alt="" loading="lazy"/></div>
+    <div class="cc cc3c1r rl1"><img src="https://picsum.photos/seed/c13/1200/400" alt="" loading="lazy"/></div>
+    <div class="cc cc1c1r rr3"><img src="https://picsum.photos/seed/c14/400/400" alt="" loading="lazy"/></div>
+    <div class="cc cc1c1r rl2"><img src="https://picsum.photos/seed/c15/400/400" alt="" loading="lazy"/></div>
+    <div class="cc cc2c1r rr2"><img src="https://picsum.photos/seed/c16/800/400" alt="" loading="lazy"/></div>
+    <div class="cc cc1c2r rl1"><img src="https://picsum.photos/seed/c17/400/800" alt="" loading="lazy"/></div>
+    <div class="cc cc1c1r rr1"><img src="https://picsum.photos/seed/c18/400/400" alt="" loading="lazy"/></div>
+    <div class="cc cc1c1r rl3"><img src="https://picsum.photos/seed/c19/400/400" alt="" loading="lazy"/></div>
+    <div class="cc cc2c1r rr3"><img src="https://picsum.photos/seed/c20/800/400" alt="" loading="lazy"/></div>
+  </div>
+</section>
+
+<!-- ── LIGHTBOX ── -->
+<div class="lbox" id="lbox">
+  <button class="lbox-close" id="lboxClose">✕</button>
+  <img id="lboxImg" src="" alt=""/>
+  <p class="lbox-hint">click anywhere to close</p>
+</div>
+
+<script>
+/* ── LIGHTBOX ── */
+const lbox = document.getElementById('lbox');
+const lboxImg = document.getElementById('lboxImg');
+
+document.querySelectorAll(
+  '#opt1 .m-cell img, #opt2 .strip-item img, #opt3 .ms-item img, #opt3 .ms-hero, #opt4 .ev-cell img, #opt5 .lb-item img, #opt6 .cc img'
+).forEach(img => {
+  img.addEventListener('click', e => {
+    e.stopPropagation();
+    lboxImg.src = img.src;
+    lbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+});
+lbox.addEventListener('click', closeLbox);
+document.getElementById('lboxClose').addEventListener('click', e => { e.stopPropagation(); closeLbox(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLbox(); });
+function closeLbox(){ lbox.classList.remove('open'); document.body.style.overflow = ''; }
+
+/* ── OPTION 3: Hero crossfade on thumbnail hover ── */
+const heroImg = document.getElementById('heroImg');
+document.querySelectorAll('#opt3 .ms-item').forEach(item => {
+  const img = item.querySelector('img');
+  item.addEventListener('mouseenter', () => {
+    heroImg.src = img.src.replace(/\/\d+\/\d+$/, '/600/800');
+    heroImg.classList.remove('bw');
+  });
+  item.addEventListener('mouseleave', () => {
+    heroImg.classList.add('bw');
+  });
+});
+
+/* ── OPTION 5: Drag-to-scroll ── */
+const track = document.getElementById('lbTrack');
+let isDragging = false, startX = 0, scrollStart = 0, hasDragged = false;
+
+track.addEventListener('mousedown', e => {
+  isDragging = true; hasDragged = false;
+  startX = e.pageX - track.getBoundingClientRect().left;
+  scrollStart = track.scrollLeft;
+  track.style.userSelect = 'none';
+});
+window.addEventListener('mousemove', e => {
+  if(!isDragging) return;
+  const x = e.pageX - track.getBoundingClientRect().left;
+  const dist = (x - startX) * 1.6;
+  if(Math.abs(dist) > 4) hasDragged = true;
+  track.scrollLeft = scrollStart - dist;
+});
+window.addEventListener('mouseup', () => { isDragging = false; track.style.userSelect = ''; });
+
+/* Prevent lightbox open when dragging */
+track.querySelectorAll('img').forEach(img => {
+  img.addEventListener('click', e => { if(hasDragged) e.stopImmediatePropagation(); });
+});
+
+/* Touch drag for Option 5 */
+let touchStartX = 0, touchScrollStart = 0;
+track.addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].pageX;
+  touchScrollStart = track.scrollLeft;
+}, {passive:true});
+track.addEventListener('touchmove', e => {
+  const dx = (e.touches[0].pageX - touchStartX) * 1.4;
+  track.scrollLeft = touchScrollStart - dx;
+}, {passive:true});
+</script>
+</body>
+</html>

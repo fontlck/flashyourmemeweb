@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FLASHYOURMEME — Design Preview Options</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,900;1,9..40,300&family=Prompt:wght@300;400;600&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0a0a0a;color:#fff;font-family:'Prompt',sans-serif;overflow-x:hidden;}
+
+/* ─── PAGE HEADER ─── */
+.page-header{padding:48px 64px 32px;border-bottom:1px solid #111;}
+.page-title{font-family:'DM Sans',sans-serif;font-size:clamp(1.2rem,3vw,1.8rem);font-weight:900;letter-spacing:-.03em;text-transform:uppercase;color:#fff;}
+.page-sub{font-size:.75rem;color:#333;letter-spacing:.1em;margin-top:6px;}
+.page-note{font-size:.72rem;color:#2a2a2a;margin-top:20px;padding:14px 20px;border:1px solid #111;line-height:1.8;}
+.page-note span{color:#666;}
+
+/* ─── OPTION SELECTOR ─── */
+.selector{display:flex;gap:1px;background:#111;padding:0;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid #111;}
+.selector::-webkit-scrollbar{display:none;}
+.sel-btn{flex:1;min-width:120px;padding:16px 20px;background:#000;font-family:'DM Sans',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#333;border:none;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.sel-btn:hover{background:#080808;color:#888;}
+.sel-btn.active{background:#000;color:#fff;border-top:2px solid #fff;padding-top:14px;}
+
+/* ─── PREVIEW AREA ─── */
+.preview-wrap{position:relative;overflow:hidden;}
+
+/* ─── BASE HERO (shared) ─── */
+.mini-hero{
+  height:480px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  padding:0 64px 60px;
+  position:relative;
+  overflow:hidden;
+  background:#000;
+  transition:background 0.5s;
+}
+.mini-h1{font-family:'DM Sans',sans-serif;font-size:clamp(3rem,8vw,6rem);font-weight:900;line-height:.88;letter-spacing:-.04em;text-transform:uppercase;position:relative;z-index:2;}
+.mini-h1 em{font-style:italic;font-weight:300;display:block;}
+.mini-sub{margin-top:20px;font-size:.85rem;color:#444;position:relative;z-index:2;max-width:420px;line-height:1.8;}
+.mini-actions{margin-top:28px;display:flex;gap:16px;align-items:center;position:relative;z-index:2;}
+.mini-btn{background:#fff;color:#000;padding:11px 28px;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:none;cursor:default;}
+.mini-ghost{color:#333;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;}
+.mini-tag{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:#222;margin-bottom:24px;position:relative;z-index:2;display:flex;align-items:center;gap:10px;}
+.mini-tag::before{content:'';width:28px;height:1px;background:#222;}
+
+/* ─── CARDS PREVIEW ─── */
+.mini-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#111;}
+.mini-card{background:#000;padding:36px 32px;position:relative;overflow:hidden;cursor:default;transition:background .3s;}
+.mc-num{font-family:'DM Sans',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.2em;color:#222;margin-bottom:32px;transition:all .3s;}
+.mc-title{font-family:'DM Sans',sans-serif;font-size:1.3rem;font-weight:900;letter-spacing:-.02em;text-transform:uppercase;margin-bottom:10px;}
+.mc-sub{font-family:'Prompt',sans-serif;font-size:.75rem;color:#333;line-height:1.8;}
+.mc-top-line{position:absolute;top:0;left:0;right:0;height:2px;background:transparent;transition:background .4s;}
+
+/* ─── SCROLL PREVIEW ─── */
+.scroll-preview{padding:48px 64px;background:#000;border-top:1px solid #111;}
+.sp-label{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#222;margin-bottom:24px;}
+.sp-blocks{display:flex;gap:16px;flex-wrap:wrap;}
+.sp-block{background:#050505;border:1px solid #0f0f0f;padding:20px 24px;flex:1;min-width:200px;}
+.sp-block-label{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:#222;margin-bottom:8px;}
+.sp-block-text{font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:700;color:#333;}
+
+/* ─── OPTION DESCRIPTIONS ─── */
+.opt-desc{padding:32px 64px;background:#050505;border-top:1px solid #111;}
+.od-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;}
+.od-item{padding:24px;border:1px solid #0f0f0f;}
+.od-label{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:#222;margin-bottom:8px;}
+.od-val{font-size:.78rem;color:#444;line-height:1.7;}
+
+/* ─── DISPLAY CONTROLLERS ─── */
+.opt-panel{display:none;}
+.opt-panel.active{display:block;}
+
+/* ════════════════════════════════════
+   OPTION 1 — FLASH MOMENT
+════════════════════════════════════ */
+#opt1 .mini-hero{background:#000;}
+
+/* Light streaks */
+#opt1 .hero-bg::before,
+#opt1 .hero-bg::after{
+  content:'';
+  position:absolute;
+  top:-20%;
+  width:1px;
+  height:140%;
+  background:linear-gradient(to bottom, transparent, rgba(255,255,255,.12), transparent);
+  animation:streak 4s ease-in-out infinite;
+}
+#opt1 .hero-bg::before{left:30%;animation-delay:0s;}
+#opt1 .hero-bg::after{left:65%;animation-delay:2s;opacity:.6;}
+
+@keyframes streak{
+  0%,100%{transform:translateY(-10%) scaleY(.8);opacity:0;}
+  30%{opacity:1;}
+  70%{opacity:.4;}
+}
+
+#opt1 .hero-noise{
+  position:absolute;inset:0;
+  opacity:.03;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px;
+}
+
+/* Card hover — flash pulse */
+#opt1 .mini-cards .mini-card:hover{background:#060606;}
+#opt1 .mini-cards .mini-card:hover .mc-top-line{background:#fff;animation:flashpulse .3s ease forwards;}
+@keyframes flashpulse{
+  0%{opacity:0;}50%{opacity:1;}100%{opacity:.6;}
+}
+
+/* Scroll: fade + translateY */
+#opt1 .scroll-demo .sp-block{
+  opacity:0;transform:translateY(20px);
+  animation:fadeUp .6s ease forwards;
+}
+#opt1 .scroll-demo .sp-block:nth-child(1){animation-delay:.1s;}
+#opt1 .scroll-demo .sp-block:nth-child(2){animation-delay:.25s;}
+#opt1 .scroll-demo .sp-block:nth-child(3){animation-delay:.4s;}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
+
+
+/* ════════════════════════════════════
+   OPTION 2 — FILM NOIR
+════════════════════════════════════ */
+#opt2 .mini-hero{background:#000;}
+#opt2 .vignette{
+  position:absolute;inset:0;z-index:1;
+  background:radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, rgba(0,0,0,.85) 100%);
+}
+#opt2 .film-grain{
+  position:absolute;inset:0;z-index:1;
+  opacity:.06;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:150px;
+  animation:grainshift 0.15s steps(1) infinite;
+}
+@keyframes grainshift{
+  0%{transform:translate(0,0);}
+  10%{transform:translate(-2px,1px);}
+  20%{transform:translate(2px,-1px);}
+  30%{transform:translate(-1px,2px);}
+  40%{transform:translate(1px,-2px);}
+  50%{transform:translate(-2px,-1px);}
+  60%{transform:translate(2px,2px);}
+  70%{transform:translate(-1px,-2px);}
+  80%{transform:translate(1px,1px);}
+  90%{transform:translate(-2px,2px);}
+  100%{transform:translate(0,0);}
+}
+/* Card: left border on hover */
+#opt2 .mini-cards .mini-card:hover{background:#050505;}
+#opt2 .mini-cards .mini-card::after{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:2px;background:transparent;transition:background .3s;
+}
+#opt2 .mini-cards .mini-card:hover::after{background:rgba(255,255,255,.15);}
+
+/* Scroll: stagger opacity only */
+#opt2 .scroll-demo .sp-block{
+  opacity:0;
+  animation:fadeOnly .8s ease forwards;
+}
+#opt2 .scroll-demo .sp-block:nth-child(1){animation-delay:.2s;}
+#opt2 .scroll-demo .sp-block:nth-child(2){animation-delay:.5s;}
+#opt2 .scroll-demo .sp-block:nth-child(3){animation-delay:.8s;}
+@keyframes fadeOnly{to{opacity:1;}}
+
+
+/* ════════════════════════════════════
+   OPTION 3 — STUDIO GRID
+════════════════════════════════════ */
+#opt3 .mini-hero{background:#000;}
+#opt3 .grid-bg{
+  position:absolute;inset:0;z-index:1;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size:60px 60px;
+}
+#opt3 .crosshair{
+  position:absolute;bottom:80px;right:100px;z-index:2;
+  width:20px;height:20px;
+  opacity:.2;
+}
+#opt3 .crosshair::before,#opt3 .crosshair::after{content:'';position:absolute;background:#fff;}
+#opt3 .crosshair::before{width:1px;height:100%;left:50%;transform:translateX(-50%);}
+#opt3 .crosshair::after{width:100%;height:1px;top:50%;transform:translateY(-50%);}
+
+/* Card: number lights up */
+#opt3 .mini-cards .mini-card:hover{background:#050505;}
+#opt3 .mini-cards .mini-card:hover .mc-num{
+  color:#fff;font-size:1rem;letter-spacing:.1em;
+}
+
+/* Scroll: line wipe effect (simulated) */
+#opt3 .scroll-demo .sp-block{
+  clip-path:inset(0 100% 0 0);
+  animation:linewipe .6s cubic-bezier(.77,0,.18,1) forwards;
+}
+#opt3 .scroll-demo .sp-block:nth-child(1){animation-delay:.1s;}
+#opt3 .scroll-demo .sp-block:nth-child(2){animation-delay:.3s;}
+#opt3 .scroll-demo .sp-block:nth-child(3){animation-delay:.5s;}
+@keyframes linewipe{to{clip-path:inset(0 0% 0 0);}}
+
+
+/* ════════════════════════════════════
+   OPTION 4 — BOKEH FLOAT
+════════════════════════════════════ */
+#opt4 .mini-hero{background:#000;}
+#opt4 .bokeh-wrap{position:absolute;inset:0;z-index:1;overflow:hidden;}
+#opt4 .bokeh{
+  position:absolute;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.08) 0%,transparent 70%);
+}
+#opt4 .b1{width:200px;height:200px;top:10%;left:15%;animation:float1 8s ease-in-out infinite;}
+#opt4 .b2{width:120px;height:120px;top:40%;left:55%;animation:float2 6s ease-in-out infinite;opacity:.6;}
+#opt4 .b3{width:80px;height:80px;top:20%;left:75%;animation:float1 10s ease-in-out infinite;opacity:.4;}
+#opt4 .b4{width:160px;height:160px;top:60%;left:30%;animation:float2 9s ease-in-out infinite;opacity:.3;}
+#opt4 .b5{width:50px;height:50px;top:70%;left:80%;animation:float1 7s ease-in-out infinite;opacity:.5;}
+
+@keyframes float1{
+  0%,100%{transform:translate(0,0);}
+  33%{transform:translate(20px,-30px);}
+  66%{transform:translate(-15px,15px);}
+}
+@keyframes float2{
+  0%,100%{transform:translate(0,0);}
+  33%{transform:translate(-25px,20px);}
+  66%{transform:translate(10px,-20px);}
+}
+
+/* Card: inner glow */
+#opt4 .mini-cards .mini-card:hover{background:#040404;box-shadow:inset 0 0 40px rgba(255,255,255,.02);}
+#opt4 .mini-cards .mini-card:hover .mc-top-line{background:#fff;}
+
+/* Scroll: pure fade, calm */
+#opt4 .scroll-demo .sp-block{
+  opacity:0;
+  animation:fadeOnly .9s ease forwards;
+}
+#opt4 .scroll-demo .sp-block:nth-child(1){animation-delay:.3s;}
+#opt4 .scroll-demo .sp-block:nth-child(2){animation-delay:.6s;}
+#opt4 .scroll-demo .sp-block:nth-child(3){animation-delay:.9s;}
+
+
+/* ════════════════════════════════════
+   OPTION 5 — SCANLINE TECH
+════════════════════════════════════ */
+#opt5 .mini-hero{background:#000;}
+#opt5 .scanlines{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,.07) 2px,
+    rgba(0,0,0,.07) 3px
+  );
+}
+#opt5 .mini-h1{text-shadow:0 0 40px rgba(255,255,255,.05);}
+
+/* Card: glitch number on hover */
+#opt5 .mini-cards .mini-card:hover{background:#050505;}
+#opt5 .mini-cards .mini-card:hover .mc-top-line{background:#fff;}
+#opt5 .mini-cards .mini-card:hover .mc-num{
+  animation:glitch .2s steps(1) 1;
+  color:#fff;
+}
+@keyframes glitch{
+  0%{transform:translate(0);}
+  20%{transform:translate(-2px,1px);color:#fff;opacity:.7;}
+  40%{transform:translate(2px,-1px);opacity:1;}
+  60%{transform:translate(-1px,0);opacity:.8;}
+  80%{transform:translate(0,1px);opacity:1;}
+  100%{transform:translate(0);}
+}
+
+/* Scroll: snappy cubic-bezier */
+#opt5 .scroll-demo .sp-block{
+  opacity:0;transform:translateY(30px);
+  animation:snapUp .3s cubic-bezier(.16,1,.3,1) forwards;
+}
+#opt5 .scroll-demo .sp-block:nth-child(1){animation-delay:.05s;}
+#opt5 .scroll-demo .sp-block:nth-child(2){animation-delay:.15s;}
+#opt5 .scroll-demo .sp-block:nth-child(3){animation-delay:.25s;}
+@keyframes snapUp{to{opacity:1;transform:translateY(0);}}
+
+
+/* ════════════════════════════════════
+   OPTION 6 — PARALLAX DEPTH
+════════════════════════════════════ */
+#opt6 .mini-hero{background:#000;cursor:none;}
+#opt6 .para-bg{
+  position:absolute;inset:-10%;z-index:1;
+  background:radial-gradient(ellipse 60% 50% at 50% 40%, rgba(255,255,255,.04) 0%, transparent 70%);
+  transition:transform .15s ease-out;
+}
+#opt6 .mini-hero:hover .para-bg{transform:translate(8px,-8px) scale(1.02);}
+#opt6 .mini-hero:hover .mini-h1{transform:translate(-4px,4px);}
+#opt6 .mini-h1{transition:transform .15s ease-out;}
+
+/* Card: magnetic-like hover */
+#opt6 .mini-cards .mini-card{transition:transform .2s ease, background .3s;}
+#opt6 .mini-cards .mini-card:hover{background:#060606;transform:translateY(-2px);}
+#opt6 .mini-cards .mini-card:hover .mc-top-line{background:#fff;}
+
+/* Scroll: scale + fade */
+#opt6 .scroll-demo .sp-block{
+  opacity:0;transform:scale(.95);
+  animation:scaleIn .7s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+#opt6 .scroll-demo .sp-block:nth-child(1){animation-delay:.1s;}
+#opt6 .scroll-demo .sp-block:nth-child(2){animation-delay:.25s;}
+#opt6 .scroll-demo .sp-block:nth-child(3){animation-delay:.4s;}
+@keyframes scaleIn{to{opacity:1;transform:scale(1);}}
+
+
+/* ─── RECOMMENDATION BADGE ─── */
+.rec-badge{
+  display:inline-block;font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;
+  padding:3px 10px;background:#fff;color:#000;font-weight:700;margin-left:10px;
+  vertical-align:middle;
+}
+
+/* ─── CHOOSE BUTTON ─── */
+.choose-bar{
+  padding:32px 64px;background:#000;border-top:1px solid #0a0a0a;
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+}
+.choose-bar p{font-size:.72rem;color:#333;letter-spacing:.08em;}
+
+@media(max-width:700px){
+  .page-header,.opt-desc,.scroll-preview,.choose-bar{padding:32px 24px;}
+  .mini-hero{padding:0 24px 40px;height:360px;}
+  .mini-h1{font-size:3rem;}
+  .mini-cards{grid-template-columns:1fr;}
+  .od-grid{grid-template-columns:1fr;}
+  .selector{flex-wrap:nowrap;}
+  .sel-btn{min-width:90px;font-size:.55rem;padding:14px 12px;}
+}
+</style>
+</head>
+<body>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-title">FLASHYOURMEME — Design Option Preview</div>
+  <div class="page-sub">Group C · Visual Design Directions · Hover over cards to preview interactions</div>
+  <div class="page-note">
+    <span>หมายเหตุ:</span> นี่คือ preview สำหรับเปรียบเทียบ design direction เท่านั้น — ยังไม่ได้ implement ลง website จริง<br/>
+    <span>วิธีดู:</span> คลิกเลือก Option ด้านบน → ดู Hero background + Hover ที่ cards ด้านล่าง → ดู Scroll animation ที่ section ล่างสุด
+  </div>
+</div>
+
+<!-- OPTION SELECTOR -->
+<div class="selector">
+  <button class="sel-btn active" onclick="showOpt(1,this)">01 · Flash Moment <span class="rec-badge">แนะนำ</span></button>
+  <button class="sel-btn" onclick="showOpt(2,this)">02 · Film Noir</button>
+  <button class="sel-btn" onclick="showOpt(3,this)">03 · Studio Grid</button>
+  <button class="sel-btn" onclick="showOpt(4,this)">04 · Bokeh Float</button>
+  <button class="sel-btn" onclick="showOpt(5,this)">05 · Scanline Tech</button>
+  <button class="sel-btn" onclick="showOpt(6,this)">06 · Parallax Depth</button>
+</div>
+
+<!-- ══════════════════════
+     OPTION 1
+══════════════════════ -->
+<div id="opt1" class="opt-panel active">
+  <!-- HERO PREVIEW -->
+  <div class="mini-hero">
+    <div class="hero-bg"></div>
+    <div class="hero-noise"></div>
+    <div class="mini-tag">Photo Booth Studio · Since 2022</div>
+    <h1 class="mini-h1">Flash<em>Your</em>Meme</h1>
+    <div class="mini-sub">ตู้ถ่ายรูปสุดพรีเมียม สำหรับงานอีเวนท์ งานแต่งงาน และสาขาประจำ</div>
+    <div class="mini-actions">
+      <span class="mini-btn">ดูบริการของเรา</span>
+      <span class="mini-ghost">ติดต่อสอบถาม →</span>
+    </div>
+  </div>
+  <!-- CARD HOVER PREVIEW -->
+  <div class="mini-cards">
+    <div class="mini-card">
+      <div class="mc-top-line"></div>
+      <div class="mc-num">01</div>
+      <div class="mc-title">Rental</div>
+      <div class="mc-sub">เช่าตู้สำหรับ Event · Wedding · Corporate — hover เพื่อดู effect</div>
+    </div>
+    <div class="mini-card">
+      <div class="mc-top-line"></div>
+      <div class="mc-num">02</div>
+      <div class="mc-title">Partnership</div>
+      <div class="mc-sub">วางตู้ประจำสาขา · ร่วมสร้างรายได้ไปด้วยกัน</div>
+    </div>
+    <div class="mini-card">
+      <div class="mc-top-line"></div>
+      <div class="mc-num">03</div>
+      <div class="mc-title">Design & Sell</div>
+      <div class="mc-sub">ออกแบบและจำหน่ายตู้ Customize ตามแบรนด์ของคุณ</div>
+    </div>
+  </div>
+  <!-- SCROLL ANIMATION PREVIEW -->
+  <div class="scroll-preview">
+    <div class="sp-label">Scroll Animation Preview — Fade Up (0.6s ease)</div>
+    <div class="sp-blocks scroll-demo">
+      <div class="sp-block">
+        <div class="sp-block-label">C2 Scroll Effect</div>
+        <div class="sp-block-text">fadeUp — translateY 24px → 0</div>
+      </div>
+      <div class="sp-block">
+        <div class="sp-block-label">Timing</div>
+        <div class="sp-block-text">0.6s ease · stagger 150ms</div>
+      </div>
+      <div class="sp-block">
+        <div class="sp-block-label">Feel</div>
+        <div class="sp-block-text">Energetic · On-brand · Punchy</div>
+      </div>
+    </div>
+  </div>
+  <!-- DESCRIPTION -->
+  <div class="opt-desc">
+    <div class="od-grid">
+      <div class="od-item">
+        <div class="od-label">Concept</div>
+        <div class="od-val">"FLASH MOMENT" — ทุก interaction คือการกดชัตเตอร์ แสง light streak วิ่งผ่าน hero ช้า ๆ</div>
+      </div>
+      <div class="od-item">
+        <div class="od-label">Hover Effect (C3)</div>
+        <div class="od-val">White line ด้านบน card + subtle flash pulse opacity 0→1→0.6 ในระยะ 0.3s</div>
+      </div>
+      <div class="od-item">
+        <div class="od-label">Why it fits</div>
+        <div class="od-val">ตรงกับชื่อ "FLASH" 100% · รักษา B&W identity · ดูมีชีวิต แต่ไม่ cluttered</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════
+     OPTION 2
+══════════════════════ -->
+<div id="opt2" class="opt-panel">
+  <div class="mini-hero">
+    <div class="vignette"></div>
+    <div class="film-grain"></div>
+    <div class="mini-tag">Photo Booth Studio · Since 2022</div>
+    <h1 class="mini-h1">Flash<em>Your</em>Meme</h1>
+    <div class="mini-sub">ตู้ถ่ายรูปสุดพรีเมียม สำหรับงานอีเวนท์ งานแต่งงาน และสาขาประจำ</div>
+    <div class="mini-actions">
+      <span class="mini-btn">ดูบริการของเรา</span>
+      <span class="mini-ghost">ติดต่อสอบถาม →</span>
+    </div>
+  </div>
+  <div class="mini-cards">
+    <div class="mini-card">
+      <div class="mc-top-line"></div>
+      <div class="mc-num">01</div>
+      <div class="mc-title">Rental</div>
+      <div class="mc-sub">เช่าตู้สำหรับ Event · Wedding · Corporate — hover เพื่อดู effect</div>
+    </div>
+    <div class="mini-card">
+      <div class="mc-top-line"></div>
+      <div class="mc-num">02</div>
+      <div class="mc-title">Partnership</div>
+      <div class="mc-sub">วางตู้ประจำสาขา · ร่วมสร้างรายได้ไปด้วยกัน</div>
+    </div>
+    <div class="mini-card">
+      <div class="mc-top-line"></div>
+      <div class="mc-num">03</div>
+      <div class="mc-title">Design & Sell</div>
+      <div class="mc-sub">ออกแบบและจำหน่ายตู้ Customize ตามแบรนด์ของคุณ</div>
+    </div>
+  </div>
+  <div class="scroll-preview">
+    <div class="sp-label">Scroll Animation Preview — Stagger Fade (0.8s ease)</div>
+    <div class="sp-blocks scroll-demo">
+      <div class="sp-block">
+        <div class="sp-block-label">C2 Scroll Effect</div>
+        <div class="sp-block-text">Stagger opacity 0→1 เท่านั้น</div>
+      </div>
+      <div class="sp-block">
+        <div class="sp-block-label">Timing</div>
+        <div class="sp-block-text">0.8s ease · stagger 300ms</div>
+      </div>
+      <div class="sp-block">
+        <div class="sp-block-label">Feel</div>
+        <div class="sp-block-text">Elegant · Cinematic · Slow burn</div>
+      </div>
+    </div>
+  </div>
+  <div class="opt-desc">
+    <div class="od-grid">
+      <div class="od-item">
+        <div class="od-label">Concept</div>
+        <div class="od-val">"FILM NOIR" — Film grain animate + vignette มืดรอบขอบ ความรู้สึก dark photography studio</div>
+      </div>
+      <div class="od-item">
+        <div class="od-label">Hover Effect (C3)</div>
+        <div class="od-val">Left border 2px white ปรากฏขึ้น + background เข้มนิดเดียว — subtle มาก ไม่ aggressive</div>
+      </div>
+      <div class="od-item">
+        <div class="od-label">Why it fits</div>
+        <div class="od-val">High-end luxury feel · B2B client น่าเชื่อถือ · ดูเหมือน high fashion brand</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════
+     OPTION 3
+══════════════════════ -->
+<div id="opt3" class="opt-panel">
+  <div class="mini-hero">
+    <div class="grid-bg"></div>
+    <div class="crosshair"></div>
+    <div class="mini-tag">Photo Booth Studio · Since 2022</div>
+    <h1 class="mini-h1">Flash<em>Your</em>Meme</h1>
+    <div class="mini-sub">ตู้ถ่ายรูปสุดพรีเมียม สำหรับงานอีเวนท์ งานแต่งงาน และสาขาประจำ</div>
+    <div class="mini-actions">
+      <span class="mini-btn">ดูบริการของเรา</span>
+      <span class="mini-ghost">ติดต่อสอบถาม →</span>
+    </div>
+  </div>
+  <div class="mini-cards">
+    <div class="mini-card">
+      <div class="mc-top-line"></div>
+      <div class="mc-num">01</div>
+      <div class="mc-title">Rental</div>
+      <div class="mc-sub">เช่าตู้สำหรับ Event · Wedding · Corporate — hover เพื่อดู effect</div>
+    </div>
+    <div class="mini-card">
+      <div class="mc-top-line"></div>
+      <div class="mc-num">02</div>
+      <div class="mc-title">Partnership</div>
+      <div class="mc-sub">วางตู้ประจำสาขา · ร่วมสร้างรายได้ไปด้วยกัน</div>
+    </div>
+    <div class="mini-card">
+      <div class="mc-top-line"></div>
+      <div class="mc-num">03</div>
+      <div class="mc-title">Design & Sell</div>
+      <div class="mc-sub">ออกแบบและจำหน่ายตู้ Customize ตามแบรนด์ของคุณ</div>
+    </div>
+  </div>
+  <div class="scroll-preview">
+    <div class="sp-label">Scroll Animation Preview — Line Wipe (0.6s cubic-bezier)</div>
+    <div class="sp-blocks scroll-demo">
+      <div class="sp-block">
+        <div class="sp-block-label">C2 Scroll Effect</div>
+        <div class="sp-block-text">Horizontal line wipe — clip-path reveal</div>
+      </div>
+      <div class="sp-block">
+        <div class="sp-block-label">Timing</div>
+        <div class="sp-block-text">0.6s cubic-bezier(.77,0,.18,1)</div>
+      </div>
+      <div class="sp-block">
+        <div class="sp-block-label">Feel</div>
+        <div class="sp-block-text">Architectural · Precise · Modern</div>
+      </div>
+    </div>
+  </div>
+  <div class="opt-desc">
+    <div class="od-grid">
+      <div class="od-item">
+        <div class="od-label">Concept</div>
+        <div class="od-val">"STUDIO GRID" — เส้น grid บาง ๆ 3% opacity + crosshair เล็ก ๆ มุมขวา ความรู้สึก professional studio</div>
+      </div>
+      <div class="od-item">
+        <div class="od-label">Hover Effect (C3)</div>
+        <div class="od-val">Number card (01, 02, 03) animate สว่างขึ้นเป็น white + ขยายนิดหน่อย — geometric precision</div>
+      </div>
+      <div class="od-item">
+        <div class="od-label">Why it fits</div>
+        <div class="od-val">Swiss design precision · Corporate event clients · แสดง systematic approach ของแบรนด์</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════
+     OPTION 4
+══════════════════════ -->
+<div id="opt4" class="opt-panel">
+  <div class="mini-hero">
+    <div class="bokeh-wrap">
+      <div class="bokeh b1"></div>
+      <div class="bokeh b2"></div>
+      <div class="bokeh b3"></div>
+      <div class="bokeh b4"></div>
+      <div class="bokeh b5"></div>
+    </div>
+    <div class="mini-tag">Photo Booth Studio · Since 2022</div>
+    <h1 class="mini-h1">Flash<em>Your</em>Meme</h1>
+    <div class="mini-sub">ตู้ถ่ายรูปสุดพรีเมียม สำหรับงานอีเวนท์ งานแต่งงาน และสาขาประจำ</div>
+    <div class="mini-actions">
+      <span class="mini-btn">ดูบริการของเรา</span>
+      <span class="mini-ghost">ติดต่อสอบถาม →</span>
+    </div>
+  </div>
+  <div class="mini-cards">
+    <div class="mini-card">
+      <div class="mc-top-line"></div>
+      <div class="mc-num">01</div>
+      <div class="mc-title">Rental</div>
+      <div class="mc-sub">เช่าตู้สำหรับ Event · Wedding · Corporate — hover เพื่อดู effect</div>
+    </div>
+    <div class="mini-card">
+      <div class="mc-top-line"></div>
+      <div class="mc-num">02</div>
+      <div class="mc-title">Partnership</div>
+      <div class="mc-sub">วางตู้ประจำสาขา · ร่วมสร้างรายได้ไปด้วยกัน</div>
+    </div>
+    <div class="mini-card">
+      <div class="mc-top-line"></div>
+      <div class="mc-num">03</div>
+      <div class="mc-title">Design & Sell</div>
+      <div class="mc-sub">ออกแบบและจำหน่ายตู้ Customize ตามแบรนด์ของคุณ</div>
+    </div>
+  </div>
+  <div class="scroll-preview">
+    <div class="sp-label">Scroll Animation Preview — Pure Fade (0.9s ease)</div>
+    <div class="sp-blocks scroll-demo">
+      <div class="sp-block">
+        <div class="sp-block-label">C2 Scroll Effect</div>
+        <div class="sp-block-text">Opacity 0→1 เท่านั้น · ไม่มี translate</div>
+      </div>
+      <div class="sp-block">
+        <div class="sp-block-label">Timing</div>
+        <div class="sp-block-text">0.9s ease · stagger 300ms</div>
+      </div>
+      <div class="sp-block">
+        <div class="sp-block-label">Feel</div>
+        <div class="sp-block-text">Soft · Dreamy · Romantic</div>
+      </div>
+    </div>
+  </div>
+  <div class="opt-desc">
+    <div class="od-grid">
+      <div class="od-item">
+        <div class="od-label">Concept</div>
+        <div class="od-val">"BOKEH FLOAT" — วงกลมแสงโบเก้ 5 จุด ลอยช้า ๆ 6-10s cycle ดูนุ่มนวล อบอุ่น</div>
+      </div>
+      <div class="od-item">
+        <div class="od-label">Hover Effect (C3)</div>
+        <div class="od-val">Card มี inner glow เล็ก ๆ box-shadow inset rgba(255,255,255,.02) — subtle มากที่สุด</div>
+      </div>
+      <div class="od-item">
+        <div class="od-label">Why it fits</div>
+        <div class="od-val">Wedding market โดยตรง · Emotional · ดึงดูด bride & groom · น่ารักโดยไม่เสีย premium</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════
+     OPTION 5
+══════════════════════ -->
+<div id="opt5" class="opt-panel">
+  <div class="mini-hero">
+    <div class="scanlines"></div>
+    <div class="mini-tag">Photo Booth Studio · Since 2022</div>
+    <h1 class="mini-h1">Flash<em>Your</em>Meme</h1>
+    <div class="mini-sub">ตู้ถ่ายรูปสุดพรีเมียม สำหรับงานอีเวนท์ งานแต่งงาน และสาขาประจำ</div>
+    <div class="mini-actions">
+      <span class="mini-btn">ดูบริการของเรา</span>
+      <span class="mini-ghost">ติดต่อสอบถาม →</span>
+    </div>
+  </div>
+  <div class="mini-cards">
+    <div class="mini-card">
+      <div class="mc-top-line"></div>
+      <div class="mc-num">01</div>
+      <div class="mc-title">Rental</div>
+      <div class="mc-sub">เช่าตู้สำหรับ Event · Wedding · Corporate — hover เพื่อดู effect</div>
+    </div>
+    <div class="mini-card">
+      <div class="mc-top-line"></div>
+      <div class="mc-num">02</div>
+      <div class="mc-title">Partnership</div>
+      <div class="mc-sub">วางตู้ประจำสาขา · ร่วมสร้างรายได้ไปด้วยกัน</div>
+    </div>
+    <div class="mini-card">
+      <div class="mc-top-line"></div>
+      <div class="mc-num">03</div>
+      <div class="mc-title">Design & Sell</div>
+      <div class="mc-sub">ออกแบบและจำหน่ายตู้ Customize ตามแบรนด์ของคุณ</div>
+    </div>
+  </div>
+  <div class="scroll-preview">
+    <div class="sp-label">Scroll Animation Preview — Snap Up (0.3s cubic-bezier snappy)</div>
+    <div class="sp-blocks scroll-demo">
+      <div class="sp-block">
+        <div class="sp-block-label">C2 Scroll Effect</div>
+        <div class="sp-block-text">translateY 30px→0 · snappy spring</div>
+      </div>
+      <div class="sp-block">
+        <div class="sp-block-label">Timing</div>
+        <div class="sp-block-text">0.3s cubic-bezier(.16,1,.3,1)</div>
+      </div>
+      <div class="sp-block">
+        <div class="sp-block-label">Feel</div>
+        <div class="sp-block-text">Fast · Bold · Tech-forward</div>
+      </div>
+    </div>
+  </div>
+  <div class="opt-desc">
+    <div class="od-grid">
+      <div class="od-item">
+        <div class="od-label">Concept</div>
+        <div class="od-val">"SCANLINE TECH" — horizontal scanlines บาง ๆ 7% opacity เหมือนหน้าจอ CRT / monitor เก่า</div>
+      </div>
+      <div class="od-item">
+        <div class="od-label">Hover Effect (C3)</div>
+        <div class="od-val">Number glitch 0.2s 1 ครั้ง เมื่อ hover — subtle digital artifact ที่ดูเท่มาก</div>
+      </div>
+      <div class="od-item">
+        <div class="od-label">Why it fits</div>
+        <div class="od-val">Tech-savvy · Modern · Brand เน้น innovation · ดึงดูด corporate + brand collabs</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════
+     OPTION 6
+══════════════════════ -->
+<div id="opt6" class="opt-panel">
+  <div class="mini-hero">
+    <div class="para-bg"></div>
+    <div class="mini-tag">Photo Booth Studio · Since 2022</div>
+    <h1 class="mini-h1">Flash<em>Your</em>Meme</h1>
+    <div class="mini-sub">ตู้ถ่ายรูปสุดพรีเมียม สำหรับงานอีเวนท์ งานแต่งงาน และสาขาประจำ</div>
+    <div class="mini-actions">
+      <span class="mini-btn">ดูบริการของเรา</span>
+      <span class="mini-ghost">ติดต่อสอบถาม →</span>
+    </div>
+  </div>
+  <div class="mini-cards">
+    <div class="mini-card">
+      <div class="mc-top-line"></div>
+      <div class="mc-num">01</div>
+      <div class="mc-title">Rental</div>
+      <div class="mc-sub">เช่าตู้สำหรับ Event · Wedding · Corporate — hover เพื่อดู effect</div>
+    </div>
+    <div class="mini-card">
+      <div class="mc-top-line"></div>
+      <div class="mc-num">02</div>
+      <div class="mc-title">Partnership</div>
+      <div class="mc-sub">วางตู้ประจำสาขา · ร่วมสร้างรายได้ไปด้วยกัน</div>
+    </div>
+    <div class="mini-card">
+      <div class="mc-top-line"></div>
+      <div class="mc-num">03</div>
+      <div class="mc-title">Design & Sell</div>
+      <div class="mc-sub">ออกแบบและจำหน่ายตู้ Customize ตามแบรนด์ของคุณ</div>
+    </div>
+  </div>
+  <div class="scroll-preview">
+    <div class="sp-label">Scroll Animation Preview — Scale + Fade (0.7s spring)</div>
+    <div class="sp-blocks scroll-demo">
+      <div class="sp-block">
+        <div class="sp-block-label">C2 Scroll Effect</div>
+        <div class="sp-block-text">scale(0.95)→scale(1) + opacity · spring</div>
+      </div>
+      <div class="sp-block">
+        <div class="sp-block-label">Timing</div>
+        <div class="sp-block-text">0.7s cubic-bezier(.34,1.56,.64,1)</div>
+      </div>
+      <div class="sp-block">
+        <div class="sp-block-label">Feel</div>
+        <div class="sp-block-text">Premium · Spatial · Immersive</div>
+      </div>
+    </div>
+  </div>
+  <div class="opt-desc">
+    <div class="od-grid">
+      <div class="od-item">
+        <div class="od-label">Concept</div>
+        <div class="od-val">"PARALLAX DEPTH" — Hover hero section ทำให้ background layer เคลื่อนต่าง speed เกิด depth 3D</div>
+      </div>
+      <div class="od-item">
+        <div class="od-label">Hover Effect (C3)</div>
+        <div class="od-val">Card ลอยขึ้น translateY(-2px) + subtle top line — รู้สึก magnetic pull ดูพรีเมียม</div>
+      </div>
+      <div class="od-item">
+        <div class="od-label">Why it fits</div>
+        <div class="od-val">Luxury feel สูงสุด · High-end venue partners · ดูเหนือกว่า competitor ทุกเจ้า</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHOOSE BAR -->
+<div class="choose-bar">
+  <p>พอใจกับ option ไหน? แจ้ง option หมายเลข (หรือผสมกันได้) — ผมจะ implement ลง index.html จริงทันที</p>
+</div>
+
+<script>
+function showOpt(n, btn) {
+  document.querySelectorAll('.opt-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sel-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('opt' + n).classList.add('active');
+  btn.classList.add('active');
+
+  // Restart scroll animations
+  const blocks = document.querySelectorAll('#opt'+n+' .scroll-demo .sp-block');
+  blocks.forEach(b => {
+    b.style.animation = 'none';
+    b.offsetHeight; // reflow
+    b.style.animation = '';
+  });
+}
+</script>
+</body>
+</html>

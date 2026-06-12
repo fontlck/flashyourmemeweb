@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Locations Section — Design Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,700;0,9..40,900;1,9..40,300&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#000;color:#fff;font-family:'Prompt',sans-serif;}
+
+/* ── SECTION SHELL ── */
+#locations{
+  padding:100px 64px;
+  position:relative;
+  overflow:hidden;
+}
+
+.sec-label{
+  font-size:.65rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;
+  color:#fff;opacity:.25;margin-bottom:14px;
+  display:flex;align-items:center;gap:14px;
+}
+.sec-label::before{content:'';width:36px;height:1px;background:currentColor;}
+
+.sec-title{
+  font-family:'DM Sans',sans-serif;
+  font-size:clamp(2.4rem,5vw,4rem);
+  font-weight:900;line-height:.95;letter-spacing:-.03em;text-transform:uppercase;
+  margin-bottom:60px;
+}
+.sec-title .count{
+  font-size:.75rem;font-weight:400;letter-spacing:.1em;
+  opacity:.3;vertical-align:middle;margin-left:10px;
+}
+
+/* ── LAYOUT ── */
+.loc-layout{
+  display:grid;
+  grid-template-columns:300px 1fr;
+  gap:64px;
+  align-items:start;
+}
+
+/* ── ORBITAL MAP ── */
+.loc-map{
+  width:300px;height:300px;
+  flex-shrink:0;align-self:center;
+  position:relative;
+}
+.loc-map svg{width:100%;height:100%;display:block;overflow:visible;}
+
+/* ── RING DRAW ANIMATION ── */
+.ring-inner{
+  stroke-dasharray:315;
+  stroke-dashoffset:315;
+  transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1) 0s;
+}
+.ring-mid{
+  stroke-dasharray:566;
+  stroke-dashoffset:566;
+  transition:stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1) 0.5s;
+}
+.ring-outer{
+  stroke-dasharray:817;
+  stroke-dashoffset:817;
+  transition:stroke-dashoffset 1.6s cubic-bezier(.4,0,.2,1) 1s;
+}
+.loc-map.animate .ring-inner,
+.loc-map.animate .ring-mid,
+.loc-map.animate .ring-outer{
+  stroke-dashoffset:0;
+}
+
+/* ── DOTS (fade in after rings) ── */
+.loc-dot{
+  opacity:0;
+  transition:opacity .5s ease;
+}
+.loc-map.animate .loc-dot-d1{ opacity:1; transition-delay:1.4s; }
+.loc-map.animate .loc-dot-d2{ opacity:1; transition-delay:1.6s; }
+.loc-map.animate .loc-dot-d3{ opacity:1; transition-delay:1.9s; }
+.loc-map.animate .loc-dot-d4{ opacity:1; transition-delay:2.2s; }
+
+/* ── RADAR SWEEP ── */
+#radarG{
+  transform-origin:0px 0px;
+  animation:radarRotate 5s linear infinite;
+  animation-play-state:paused;
+  opacity:0;
+  transition:opacity .6s ease 2.4s;
+}
+.loc-map.animate #radarG{
+  animation-play-state:running;
+  opacity:1;
+}
+@keyframes radarRotate{
+  from{ transform:rotate(0deg); }
+  to{   transform:rotate(360deg); }
+}
+
+/* ── DOT PULSE (after appearing) ── */
+@keyframes dotPulse{
+  0%,100%{ opacity:.7; }
+  50%{     opacity:.2; }
+}
+.loc-map.animate .dot-pulse{
+  animation:dotPulse 3s ease-in-out infinite;
+}
+.loc-map.animate .dot-pulse-d2{ animation-delay:.8s; }
+.loc-map.animate .dot-pulse-d3{ animation-delay:1.6s; }
+
+/* ── CENTER GLOW ── */
+@keyframes centerGlow{
+  0%,100%{ r:7; opacity:.9; }
+  50%{     r:9; opacity:1; }
+}
+.loc-map.animate .center-dot{
+  animation:centerGlow 2s ease-in-out infinite 2s;
+}
+
+/* ── FILTER TABS ── */
+.loc-filters{
+  display:flex;gap:6px;flex-wrap:wrap;
+  margin-bottom:32px;
+}
+.loc-filter{
+  font-family:'DM Sans',sans-serif;
+  font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:8px 16px;
+  border:1px solid #1a1a1a;
+  background:transparent;color:#444;
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.loc-filter:hover{border-color:#333;color:#aaa;}
+.loc-filter.active{background:#fff;color:#000;border-color:#fff;}
+.loc-filter .count{font-size:.55rem;opacity:.6;margin-left:5px;}
+
+/* ── VENUE GRID ── */
+.loc-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+  gap:1px;background:#111;
+}
+.loc-card{
+  background:#000;padding:22px 20px;
+  cursor:pointer;transition:background .2s;
+  position:relative;
+}
+.loc-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:transparent;transition:background .3s;
+}
+.loc-card:hover{background:#060606;}
+.loc-card:hover::before{background:#fff;}
+.loc-card:hover .loc-name{color:#fff;}
+
+.loc-name{
+  font-family:'DM Sans',sans-serif;
+  font-size:.95rem;font-weight:700;letter-spacing:-.01em;
+  color:#bbb;margin-bottom:4px;line-height:1.2;
+  transition:color .2s;
+}
+.loc-city{
+  font-family:'Prompt',sans-serif;
+  font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;
+  color:#2a2a2a;
+}
+
+/* ── COUNT BAR ── */
+.loc-count{
+  margin-top:20px;
+  font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;
+  color:#2a2a2a;
+  display:flex;align-items:center;gap:12px;
+}
+.loc-count::before{content:'';flex:1;height:1px;background:#111;}
+
+@media(max-width:900px){
+  #locations{padding:80px 24px;}
+  .loc-layout{grid-template-columns:1fr;gap:40px;}
+  .loc-map{display:none;}
+}
+</style>
+</head>
+<body>
+
+<section id="locations">
+  <div class="sec-label">Where to find us</div>
+  <h2 class="sec-title">Locations <span class="count">27</span></h2>
+
+  <div class="loc-layout">
+
+    <!-- ORBITAL MAP — dots at geographically accurate bearings from Bangkok -->
+    <!-- bearing = atan2(dlon, dlat), CW from North -->
+    <!-- SVG: x = r·sin(bearing), y = -r·cos(bearing) -->
+    <div class="loc-map" id="locMap">
+      <svg viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="centerGlow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <g transform="translate(150,150)">
+
+          <!-- Crosshair -->
+          <line x1="0" y1="-150" x2="0" y2="150" stroke="#0e0e0e" stroke-width="1" stroke-dasharray="3,9"/>
+          <line x1="-150" y1="0" x2="150" y2="0" stroke="#0e0e0e" stroke-width="1" stroke-dasharray="3,9"/>
+
+          <!-- ── RINGS (Ring Draw) ── -->
+          <circle class="ring-inner" r="50"  stroke="#2a2a2a" stroke-width="1" stroke-linecap="round"/>
+          <circle class="ring-mid"   r="90"  stroke="#1e1e1e" stroke-width="1" stroke-linecap="round"/>
+          <circle class="ring-outer" r="130" stroke="#161616" stroke-width="1" stroke-linecap="round"/>
+
+          <!-- ── RADAR SWEEP ── -->
+          <g id="radarG">
+            <path d="M0,0 L0,-130 A130,130 0 0,0 -92,-92 Z"  fill="#fff" opacity="0.03"/>
+            <path d="M0,0 L0,-130 A130,130 0 0,0 -55,-118 Z" fill="#fff" opacity="0.05"/>
+            <path d="M0,0 L0,-130 A130,130 0 0,0 -23,-128 Z" fill="#fff" opacity="0.07"/>
+            <line x1="0" y1="-18" x2="0" y2="-130" stroke="#fff" stroke-width="3" opacity="0.08" filter="url(#glow)"/>
+            <line x1="0" y1="-18" x2="0" y2="-130" stroke="#fff" stroke-width="1" opacity="0.55"/>
+            <circle cx="0" cy="-130" r="2" fill="#fff" opacity="0.8"/>
+          </g>
+
+          <!-- ══ INNER RING (r=50) — กรุงเทพ ══ -->
+          <!-- venues spread around BKK geographically; Sukhumvit corridor = NE, Silom/Charoenkrung = S -->
+          <!-- Ploenchit ~NE 50°:  x=50·sin50=38  y=−50·cos50=−32 -->
+          <circle class="loc-dot loc-dot-d1 dot-pulse"              title="Ploenchit"     cx="38"  cy="-32" r="3.5" fill="#fff" opacity="0.75"/>
+          <!-- EMsphere Asok ~NE 65°: x=45 y=−21 -->
+          <circle class="loc-dot loc-dot-d1 dot-pulse dot-pulse-d2" title="EMsphere"      cx="45"  cy="-21" r="3.5" fill="#fff" opacity="0.7"/>
+          <!-- Pin.bkk Sukhumvit31 ~ENE 75°: x=48 y=−13 -->
+          <circle class="loc-dot loc-dot-d1 dot-pulse dot-pulse-d3" title="Sukhumvit31"   cx="48"  cy="-13" r="3.5" fill="#fff" opacity="0.7"/>
+          <!-- Charoenkrung ~SSE 165°: x=50·sin165=13 y=−50·cos165=48 -->
+          <circle class="loc-dot loc-dot-d1 dot-pulse"              title="Charoenkrung"  cx="13"  cy="48"  r="3.5" fill="#fff" opacity="0.65"/>
+          <!-- Silom ~S 190°: x=50·sin190=−9 y=−50·cos190=49 -->
+          <circle class="loc-dot loc-dot-d1 dot-pulse dot-pulse-d2" title="Silom"         cx="-9"  cy="49"  r="3.5" fill="#fff" opacity="0.65"/>
+          <!-- Neilson Hays Library ~SSW 200°: x=50·sin200=−17 y=−50·cos200=47 -->
+          <circle class="loc-dot loc-dot-d1 dot-pulse dot-pulse-d3" title="Neilson Hays"  cx="-17" cy="47"  r="3.5" fill="#fff" opacity="0.65"/>
+          <!-- Slowcombo ~SE 155°: x=50·sin155=21 y=−50·cos155=45 -->
+          <circle class="loc-dot loc-dot-d1 dot-pulse"              title="Slowcombo"      cx="21"  cy="45"  r="3.5" fill="#fff" opacity="0.65"/>
+          <!-- Sonny Ari ~NE 55°: x=50·sin55=41 y=−50·cos55=−29 -->
+          <circle class="loc-dot loc-dot-d1 dot-pulse dot-pulse-d2" title="Sonny Ari"     cx="41"  cy="-29" r="3.5" fill="#fff" opacity="0.7"/>
+
+          <!-- ══ MID RING (r=90) — กลาง + ตะวันออก ══ -->
+          <!-- Ayutthaya N 4°:     x=90·sin4=6    y=−90·cos4=−90 -->
+          <circle class="loc-dot loc-dot-d2 dot-pulse"              title="Ayutthaya"           cx="6"   cy="-90" r="2.5" fill="#777" opacity="0.85"/>
+          <!-- Khao Kho N 11°:     x=90·sin11=17  y=−90·cos11=−88 -->
+          <circle class="loc-dot loc-dot-d2 dot-pulse dot-pulse-d2" title="Khao Kho"            cx="17"  cy="-88" r="2.5" fill="#777" opacity="0.8"/>
+          <!-- Khao Yai NE 51°:    x=90·sin51=70  y=−90·cos51=−57 -->
+          <circle class="loc-dot loc-dot-d2 dot-pulse dot-pulse-d3" title="Khao Yai"            cx="70"  cy="-57" r="2.5" fill="#777" opacity="0.8"/>
+          <!-- Peeps Bangsaen SE 136°: x=90·sin136=56 y=−90·cos136=65 (slightly offset for 2 venues) -->
+          <circle class="loc-dot loc-dot-d2 dot-pulse"              title="Peeps Bangsaen"       cx="56"  cy="66"  r="2.5" fill="#777" opacity="0.7"/>
+          <!-- Casa Tropika Bangsaen SE 140° -->
+          <circle class="loc-dot loc-dot-d2 dot-pulse dot-pulse-d2" title="Casa Tropika Bangsaen" cx="62"  cy="64"  r="2.5" fill="#777" opacity="0.7"/>
+          <!-- Casa Myka Pattaya SSE 154°: x=90·sin154=39 y=−90·cos154=81 -->
+          <circle class="loc-dot loc-dot-d2 dot-pulse dot-pulse-d3" title="Casa Myka Pattaya"   cx="36"  cy="83"  r="2.5" fill="#777" opacity="0.65"/>
+          <!-- House of Benedict Pattaya SSE 157° -->
+          <circle class="loc-dot loc-dot-d2 dot-pulse"              title="HOB Pattaya"          cx="42"  cy="82"  r="2.5" fill="#777" opacity="0.65"/>
+          <!-- Ratchaburi WSW 253°: x=90·sin253=−86 y=−90·cos253=26 -->
+          <circle class="loc-dot loc-dot-d2 dot-pulse dot-pulse-d2" title="Ratchaburi"           cx="-86" cy="26"  r="2.5" fill="#777" opacity="0.75"/>
+          <!-- Nakhon Pathom WNW 279°: x=90·sin279=−89 y=−90·cos279=−14 -->
+          <circle class="loc-dot loc-dot-d2 dot-pulse dot-pulse-d3" title="Nakhon Pathom"        cx="-89" cy="-14" r="2.5" fill="#777" opacity="0.75"/>
+
+          <!-- ══ OUTER RING (r=130) — เหนือ + อีสาน + ใต้ ══ -->
+          <!-- Chiang Mai NNW 343°: x=130·sin343=−38 y=−130·cos343=−124 -->
+          <circle class="loc-dot loc-dot-d3" title="Chiang Mai"         cx="-38"  cy="-124" r="2" fill="#484848"/>
+          <text class="loc-dot loc-dot-d4" x="-36" y="-127" fill="#2a2a2a" font-size="6.5" font-family="monospace">เชียงใหม่</text>
+
+          <!-- Udon Thani NNE 32°: x=130·sin32=69 y=−130·cos32=−110 -->
+          <circle class="loc-dot loc-dot-d3" title="Udon Thani"         cx="69"   cy="-110" r="2" fill="#484848"/>
+          <!-- Rusty Khon Kaen NE 38°: x=130·sin38=80 y=−130·cos38=−102 -->
+          <circle class="loc-dot loc-dot-d3" title="Rusty Khon Kaen"    cx="80"   cy="-102" r="2" fill="#484848"/>
+          <!-- Ultra Khon Kaen NE 42°: x=130·sin42=87 y=−130·cos42=−97 -->
+          <circle class="loc-dot loc-dot-d3" title="Ultra Khon Kaen"    cx="87"   cy="-97"  r="2" fill="#484848"/>
+          <text class="loc-dot loc-dot-d4" x="90" y="-108" fill="#2a2a2a" font-size="6.5" font-family="monospace">อีสาน</text>
+
+          <!-- Buriram ENE 64°: x=130·sin64=117 y=−130·cos64=−57 -->
+          <circle class="loc-dot loc-dot-d3" title="Buriram"            cx="117"  cy="-57"  r="2" fill="#484848"/>
+          <!-- Godfather Ubon ENE 71°: x=130·sin71=123 y=−130·cos71=−42 -->
+          <circle class="loc-dot loc-dot-d3" title="Godfather Ubon"     cx="123"  cy="-42"  r="2" fill="#484848"/>
+          <!-- Tempo Ubon ENE 73°: x=130·sin73=124 y=−130·cos73=−38 -->
+          <circle class="loc-dot loc-dot-d3" title="Tempo Ubon"         cx="124"  cy="-35"  r="2" fill="#484848"/>
+
+          <!-- Major Ocean Chumphon SSW 203°: x=130·sin203=−51 y=−130·cos203=120 -->
+          <circle class="loc-dot loc-dot-d3" title="Major Ocean Chumphon" cx="-51"  cy="120"  r="2" fill="#484848"/>
+          <!-- Nawa Cafe Chumphon SSW 205° -->
+          <circle class="loc-dot loc-dot-d3" title="Nawa Cafe Chumphon"   cx="-57"  cy="117"  r="2" fill="#484848"/>
+          <text class="loc-dot loc-dot-d4" x="-78" y="130" fill="#2a2a2a" font-size="6.5" font-family="monospace">ใต้</text>
+
+          <!-- ── CENTER DOT (BKK) ── -->
+          <circle class="center-dot" cx="0" cy="0" r="7" fill="#fff" opacity="0.95" filter="url(#centerGlow)"/>
+          <text x="10" y="4" fill="#555" font-size="8" font-family="monospace" letter-spacing="1">BKK</text>
+
+        </g>
+      </svg>
+    </div>
+
+    <!-- RIGHT: FILTERS + GRID -->
+    <div class="loc-right">
+
+      <div class="loc-filters">
+        <button class="loc-filter active">All <span class="count">27</span></button>
+        <button class="loc-filter">Bangkok <span class="count">8</span></button>
+        <button class="loc-filter">Central <span class="count">5</span></button>
+        <button class="loc-filter">East <span class="count">4</span></button>
+        <button class="loc-filter">Northeast <span class="count">6</span></button>
+        <button class="loc-filter">North <span class="count">1</span></button>
+        <button class="loc-filter">South <span class="count">3</span></button>
+      </div>
+
+      <div class="loc-grid" id="locGrid">
+        <!-- Bangkok -->
+        <div class="loc-card" data-region="Bangkok"><div class="loc-name">Qottontale</div><div class="loc-city">Ploenchit · BKK</div></div>
+        <div class="loc-card" data-region="Bangkok"><div class="loc-name">Tictactoe</div><div class="loc-city">EMsphere · BKK</div></div>
+        <div class="loc-card" data-region="Bangkok"><div class="loc-name">Pin.bkk</div><div class="loc-city">Sukhumvit 31 · BKK</div></div>
+        <div class="loc-card" data-region="Bangkok"><div class="loc-name">Barber</div><div class="loc-city">Silom · BKK</div></div>
+        <div class="loc-card" data-region="Bangkok"><div class="loc-name">The Corner House</div><div class="loc-city">Charoenkrung · BKK</div></div>
+        <div class="loc-card" data-region="Bangkok"><div class="loc-name">Neilson Hays Library</div><div class="loc-city">Surawong · BKK</div></div>
+        <div class="loc-card" data-region="Bangkok"><div class="loc-name">Slowcombo</div><div class="loc-city">Silom · BKK</div></div>
+        <div class="loc-card" data-region="Bangkok"><div class="loc-name">Sonny Ari</div><div class="loc-city">Ari · BKK</div></div>
+        <!-- กลาง -->
+        <div class="loc-card" data-region="Central"><div class="loc-name">Saturday Cafe</div><div class="loc-city">Nakhon Pathom</div></div>
+        <div class="loc-card" data-region="Central"><div class="loc-name">Mosoyodia</div><div class="loc-city">Ayutthaya</div></div>
+        <div class="loc-card" data-region="Central"><div class="loc-name">Coffee Please in the Garden</div><div class="loc-city">Ratchaburi</div></div>
+        <div class="loc-card" data-region="Central"><div class="loc-name">DusitD2</div><div class="loc-city">Khao Yai</div></div>
+        <div class="loc-card" data-region="Central"><div class="loc-name">180 All Day All Season</div><div class="loc-city">Khao Kho</div></div>
+        <!-- ตะวันออก -->
+        <div class="loc-card" data-region="East"><div class="loc-name">Peeps Breakfast &amp; Bar</div><div class="loc-city">Bangsaen · Chonburi</div></div>
+        <div class="loc-card" data-region="East"><div class="loc-name">Casa Tropika</div><div class="loc-city">Bangsaen · Chonburi</div></div>
+        <div class="loc-card" data-region="East"><div class="loc-name">Casa Myka</div><div class="loc-city">Pattaya · Chonburi</div></div>
+        <div class="loc-card" data-region="East"><div class="loc-name">House of Benedict</div><div class="loc-city">Pattaya · Chonburi</div></div>
+        <!-- อีสาน -->
+        <div class="loc-card" data-region="Northeast"><div class="loc-name">Rusty</div><div class="loc-city">Khon Kaen</div></div>
+        <div class="loc-card" data-region="Northeast"><div class="loc-name">Ultra</div><div class="loc-city">Khon Kaen</div></div>
+        <div class="loc-card" data-region="Northeast"><div class="loc-name">Godfather</div><div class="loc-city">Udon Thani</div></div>
+        <div class="loc-card" data-region="Northeast"><div class="loc-name">Godfather</div><div class="loc-city">Ubon Ratchathani</div></div>
+        <div class="loc-card" data-region="Northeast"><div class="loc-name">Tempo</div><div class="loc-city">Ubon Ratchathani</div></div>
+        <div class="loc-card" data-region="Northeast"><div class="loc-name">Buriram United</div><div class="loc-city">Buriram</div></div>
+        <!-- เหนือ -->
+        <div class="loc-card" data-region="North"><div class="loc-name">Fringe</div><div class="loc-city">Chiang Mai</div></div>
+        <!-- ใต้ -->
+        <div class="loc-card" data-region="South"><div class="loc-name">Major Ocean</div><div class="loc-city">Chumphon · Booth 1</div></div>
+        <div class="loc-card" data-region="South"><div class="loc-name">Major Ocean</div><div class="loc-city">Chumphon · Booth 2</div></div>
+        <div class="loc-card" data-region="South"><div class="loc-name">Nawa Cafe</div><div class="loc-city">Chumphon</div></div>
+      </div>
+
+      <div class="loc-count">27 locations across Thailand</div>
+    </div>
+  </div>
+</section>
+
+<script>
+// ── Filter logic ──
+const filters = document.querySelectorAll('.loc-filter');
+const cards   = document.querySelectorAll('.loc-card');
+filters.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filters.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const text = btn.textContent.trim().replace(/\d+/g,'').trim();
+    const all  = text === 'All';
+    cards.forEach(card => {
+      card.style.display = (all || card.dataset.region === text) ? '' : 'none';
+    });
+  });
+});
+
+// ── Ring Draw + Radar trigger ──
+const mapEl = document.getElementById('locMap');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      mapEl.classList.add('animate');
+      observer.unobserve(mapEl);
+    }
+  });
+}, { threshold: 0.4 });
+observer.observe(mapEl);
+
+// For preview — trigger immediately after short delay
+setTimeout(() => mapEl.classList.add('animate'), 400);
+</script>
+</body>
+</html>

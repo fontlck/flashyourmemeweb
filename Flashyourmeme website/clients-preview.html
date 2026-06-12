@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Trusted by Leading Brands — Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,700;9..40,900&family=Prompt:wght@300;400;600&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#000;color:#fff;font-family:'Prompt',sans-serif;}
+
+/* ── SECTION ── */
+#clients{
+  padding:100px 0;
+  overflow:hidden;
+  border-top:1px solid #0f0f0f;
+}
+.clients-header{
+  padding:0 64px;
+  margin-bottom:64px;
+}
+.sec-label{
+  font-size:.65rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;
+  color:#fff;opacity:.25;display:flex;align-items:center;gap:14px;margin-bottom:14px;
+}
+.sec-label::before{content:'';width:36px;height:1px;background:currentColor;}
+.sec-title{
+  font-family:'DM Sans',sans-serif;
+  font-size:clamp(2.4rem,5vw,4rem);
+  font-weight:900;line-height:.95;letter-spacing:-.03em;text-transform:uppercase;
+}
+.sec-title span{font-style:italic;font-weight:300;}
+
+/* ── MARQUEE ── */
+.marquee-wrap{
+  width:100%;
+  mask-image:linear-gradient(to right,transparent 0%,black 7%,black 93%,transparent 100%);
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,black 7%,black 93%,transparent 100%);
+}
+.marquee-track{
+  display:flex;align-items:center;
+  width:max-content;
+  animation:scrollLeft 36s linear infinite;
+}
+.marquee-track:hover{ animation-play-state:paused; }
+@keyframes scrollLeft{
+  from{ transform:translateX(0); }
+  to{   transform:translateX(-50%); }
+}
+
+/* ── LOGO ITEM BASE ── */
+.logo-item{
+  display:flex;align-items:center;justify-content:center;
+  padding:0 52px;height:96px;
+  flex-shrink:0;position:relative;cursor:pointer;
+}
+.logo-item + .logo-item::before{
+  content:'';position:absolute;left:0;top:50%;
+  transform:translateY(-50%);
+  width:1px;height:20px;background:#141414;
+}
+
+/* ── GROUP A: transparent / dark background logos ── */
+/* default = white silhouette; hover = original brand colour */
+.logo-item img{
+  height:34px;max-width:145px;width:auto;
+  object-fit:contain;display:block;
+  filter:brightness(0) invert(1);
+  opacity:.28;
+  transition:filter .4s ease, opacity .4s ease, transform .4s ease;
+}
+.logo-item:hover img{
+  filter:none;
+  opacity:1;
+  transform:scale(1.06);
+}
+
+/* ── GROUP B: white-background logos (.wb) ── */
+/* grayscale ก่อน เพื่อให้ invert ไม่เพี้ยนสี (เขียว→magenta etc.) */
+/* invert: white-bg→black(หาย), dark logo→white(เห็น) */
+.logo-item.wb img{
+  filter:grayscale(1) invert(1);
+  opacity:.32;
+}
+.logo-item.wb{
+  transition:background .4s ease;
+  border-radius:6px;
+}
+.logo-item.wb:hover{
+  background:rgba(22,22,22,.95);
+}
+.logo-item.wb:hover img{
+  filter:none;
+  opacity:1;
+  transform:scale(1.06);
+}
+
+/* ── GROUP C: full-colour on coloured background (.cc) ── */
+/* default = grayscale+screen so bg fades; hover = full colour */
+.logo-item.cc img{
+  filter:grayscale(1) brightness(1.6);
+  opacity:.22;
+  mix-blend-mode:screen;
+}
+.logo-item.cc:hover img{
+  filter:none;
+  opacity:1;
+  mix-blend-mode:normal;
+  transform:scale(1.06);
+}
+</style>
+</head>
+<body>
+<section id="clients">
+
+  <div class="clients-header">
+    <div class="sec-label">Trusted by</div>
+    <h2 class="sec-title">Leading <span>Brands</span></h2>
+  </div>
+
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+
+      <!-- ══ SET 1 ══ -->
+
+      <!-- Group A: transparent/dark bg → white by default, original colour on hover -->
+      <div class="logo-item">
+        <img src="partnership%20logo/foodpanda-logo-1.svg" alt="Foodpanda"/>
+      </div>
+      <div class="logo-item">
+        <img src="partnership%20logo/estee-lauder-3.svg" alt="Estée Lauder"/>
+      </div>
+      <div class="logo-item">
+        <img src="partnership%20logo/PIN-logo-orange.svg" alt="PIN"/>
+      </div>
+      <div class="logo-item">
+        <img src="partnership%20logo/logo.png" alt="Partner"/>
+      </div>
+
+      <!-- Group B: white-bg logos → grayscale+invert default, reveal in dark pill on hover -->
+      <div class="logo-item wb">
+        <img src="partnership%20logo/universal%20music%20thailand.webp" alt="Universal Music Thailand" style="height:38px"/>
+      </div>
+      <div class="logo-item wb">
+        <img src="partnership%20logo/warner-bros.svg" alt="Warner Bros." style="height:38px"/>
+      </div>
+      <div class="logo-item wb">
+        <img src="partnership%20logo/victorias-secret.png" alt="Victoria's Secret" style="height:44px"/>
+      </div>
+      <div class="logo-item wb">
+        <img src="partnership%20logo/logo-app-sm.png" alt="KPLUS" style="height:36px"/>
+      </div>
+      <div class="logo-item wb">
+        <img src="partnership%20logo/images.png" alt="DusitD2 Khao Yai" style="height:34px"/>
+      </div>
+      <div class="logo-item wb">
+        <img src="partnership%20logo/images%20(1).png" alt="Tictactoe" style="height:40px"/>
+      </div>
+      <div class="logo-item wb">
+        <img src="partnership%20logo/TDSMainLOGO.png" alt="Thammasat Design School" style="height:34px;max-width:170px"/>
+      </div>
+      <div class="logo-item wb">
+        <img src="partnership%20logo/HOKA-logo.webp" alt="HOKA" style="height:36px"/>
+      </div>
+
+      <!-- Group C: coloured background → screen blend default, full colour on hover -->
+      <div class="logo-item cc">
+        <img src="partnership%20logo/images%20(2).png" alt="Qottontale" style="height:40px;border-radius:4px"/>
+      </div>
+      <div class="logo-item cc">
+        <img src="partnership%20logo/pngegg.png" alt="CJ Express" style="height:38px"/>
+      </div>
+
+      <!-- ══ SET 2 — duplicate for seamless loop ══ -->
+      <div class="logo-item">
+        <img src="partnership%20logo/foodpanda-logo-1.svg" alt="Foodpanda"/>
+      </div>
+      <div class="logo-item">
+        <img src="partnership%20logo/estee-lauder-3.svg" alt="Estée Lauder"/>
+      </div>
+      <div class="logo-item">
+        <img src="partnership%20logo/PIN-logo-orange.svg" alt="PIN"/>
+      </div>
+      <div class="logo-item">
+        <img src="partnership%20logo/logo.png" alt="Partner"/>
+      </div>
+      <div class="logo-item wb">
+        <img src="partnership%20logo/universal%20music%20thailand.webp" alt="Universal Music Thailand" style="height:38px"/>
+      </div>
+      <div class="logo-item wb">
+        <img src="partnership%20logo/warner-bros.svg" alt="Warner Bros." style="height:38px"/>
+      </div>
+      <div class="logo-item wb">
+        <img src="partnership%20logo/victorias-secret.png" alt="Victoria's Secret" style="height:44px"/>
+      </div>
+      <div class="logo-item wb">
+        <img src="partnership%20logo/logo-app-sm.png" alt="KPLUS" style="height:36px"/>
+      </div>
+      <div class="logo-item wb">
+        <img src="partnership%20logo/images.png" alt="DusitD2 Khao Yai" style="height:34px"/>
+      </div>
+      <div class="logo-item wb">
+        <img src="partnership%20logo/images%20(1).png" alt="Tictactoe" style="height:40px"/>
+      </div>
+      <div class="logo-item wb">
+        <img src="partnership%20logo/TDSMainLOGO.png" alt="Thammasat Design School" style="height:34px;max-width:170px"/>
+      </div>
+      <div class="logo-item wb">
+        <img src="partnership%20logo/HOKA-logo.webp" alt="HOKA" style="height:36px"/>
+      </div>
+      <div class="logo-item cc">
+        <img src="partnership%20logo/images%20(2).png" alt="Qottontale" style="height:40px;border-radius:4px"/>
+      </div>
+      <div class="logo-item cc">
+        <img src="partnership%20logo/pngegg.png" alt="CJ Express" style="height:38px"/>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+</body>
+</html>
