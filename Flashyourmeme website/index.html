@@ -441,7 +441,7 @@ footer{padding:48px 64px;border-top:1px solid #0a0a0a;display:flex;justify-conte
 <!-- SERVICES -->
 <section id="services">
   <div class="sec-label reveal">Our Booths</div>
-  <h2 class="sec-title reveal reveal-d1">Wedding <span>Packages</span></h2>
+  <h2 class="sec-title reveal reveal-d1">Our <span>Packages</span></h2>
 
   <style>
   .pkg-row{display:flex;gap:1px;background:#111;overflow-x:auto;scrollbar-width:none;}
@@ -466,9 +466,72 @@ footer{padding:48px 64px;border-top:1px solid #0a0a0a;display:flex;justify-conte
   .pkg-cta{margin-top:24px;font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;color:#222;text-decoration:none;display:flex;align-items:center;gap:6px;transition:color .2s;}
   .pkg-cta:hover{color:#fff;}
   @media(max-width:900px){.pkg-row{flex-direction:column;}.pkg-card{flex:none;}.pkg-img{aspect-ratio:4/3;}}
+
+  /* Featured receipt card */
+  .pkg-featured{display:flex;gap:1px;background:#111;margin-bottom:1px;}
+  .pkg-featured-img{width:42%;object-fit:cover;object-position:center;background:#050505;display:block;max-height:540px;}
+  .pkg-featured-body{flex:1;background:#000;padding:48px;display:flex;flex-direction:column;transition:background .3s;position:relative;}
+  .pkg-featured-body::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:transparent;transition:background .4s;}
+  .pkg-featured:hover .pkg-featured-body{background:#060606;}
+  .pkg-featured:hover .pkg-featured-body::before{background:#fff;}
+  .pkg-featured-cols{display:flex;gap:48px;flex:1;}
+  .pkg-featured-left{display:flex;flex-direction:column;}
+  .pkg-featured-right{display:flex;gap:48px;flex:1;}
+  .pkg-featured-rates{display:flex;flex-direction:column;gap:10px;border-left:1px solid #0f0f0f;padding-left:32px;}
+  .pkg-featured-feats{display:flex;flex-direction:column;gap:10px;border-left:1px solid #0f0f0f;padding-left:32px;}
+  @media(max-width:900px){
+    .pkg-featured{flex-direction:column;}
+    .pkg-featured-img{width:100%;max-height:260px;}
+    .pkg-featured-body{padding:32px 24px;}
+    .pkg-featured-cols{flex-direction:column;gap:24px;}
+    .pkg-featured-right{flex-direction:column;gap:24px;}
+    .pkg-featured-rates,.pkg-featured-feats{border-left:none;padding-left:0;border-top:1px solid #0f0f0f;padding-top:16px;}
+  }
   </style>
 
-    <div class="pkg-row">
+  <!-- FEATURED: FlashyourReceipt -->
+  <div class="pkg-featured reveal">
+    <img class="pkg-featured-img" id="receiptImg" src="wedding%20packages%20image/receipt-white.png" alt="FlashyourReceipt Booth"/>
+    <div class="pkg-featured-body">
+      <span class="pkg-badge" style="margin-bottom:20px;">Receipt Series</span>
+      <div class="pkg-name" style="font-size:3rem;margin-bottom:4px;">FlashyourReceipt</div>
+      <div class="pkg-size" style="margin-bottom:20px;">W30 · L50 · H35 CM</div>
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:36px;">
+        <button class="rcpt-swatch active" data-color="White" data-img="wedding%20packages%20image/receipt-white.png" style="background:#f0ede8;" title="White"></button>
+        <button class="rcpt-swatch" data-color="Oak" data-img="wedding%20packages%20image/receipt-oak.png" style="background:#b07d4f;" title="Oak"></button>
+        <button class="rcpt-swatch" data-color="Walnut" data-img="wedding%20packages%20image/receipt-walnut.png" style="background:#3b2314;" title="Walnut"></button>
+        <span id="receiptColorLabel" style="font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:#444;margin-left:6px;">White</span>
+      </div>
+      <div class="pkg-featured-cols">
+        <div class="pkg-featured-left">
+          <a href="wedding-package.html" class="pkg-cta" style="margin-top:auto;">ดูรายละเอียด →</a>
+        </div>
+        <div class="pkg-featured-right">
+          <div class="pkg-featured-rates">
+            <div style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#333;margin-bottom:6px;">ราคา</div>
+            <div class="pkg-rate-row"><span class="pkg-rh">3H Day/Night</span><span class="pkg-price">4,500.-</span></div>
+            <div class="pkg-rate-row"><span class="pkg-rh">4H Day/Night</span><span class="pkg-price">5,000.-</span></div>
+            <div class="pkg-rate-row"><span class="pkg-rh">5H Day/Night</span><span class="pkg-price">5,500.-</span></div>
+            <div class="pkg-rate-row"><span class="pkg-rh">6H Day/Night</span><span class="pkg-price">6,000.-</span></div>
+            <div class="pkg-rate-row"><span class="pkg-rh">12H Day/Night</span><span class="pkg-price">10,000.-</span></div>
+          </div>
+          <div class="pkg-featured-feats">
+            <div style="font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#333;margin-bottom:6px;">รวมในแพ็กเกจ</div>
+            <ul class="pkg-feats" style="margin:0;">
+              <li>แสกนรับไฟล์ภาพ</li>
+              <li>ถ่ายได้ไม่จำกัดจำนวนรูป</li>
+              <li>พิมพ์ชื่อ/ข้อความได้</li>
+              <li>เปลี่ยนหน้าจอโปรแกรม</li>
+              <li>รวมค่าขนส่งและติดตั้ง (กทม)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wedding Booths row -->
+  <div class="pkg-row">
 
     <div class="pkg-card reveal reveal-d1">
       <img class="pkg-img" src="wedding%20packages%20image/vintage.png" alt="VINTAGE Booth"/>
@@ -557,12 +620,57 @@ footer{padding:48px 64px;border-top:1px solid #0a0a0a;display:flex;justify-conte
 
   </div>
 </section>
+<style>
+.rcpt-swatch{width:20px;height:20px;border-radius:50%;border:2px solid #1a1a1a;cursor:pointer;padding:0;transition:border-color .2s;}
+.rcpt-swatch.active{border-color:#fff;}
+</style>
+<style>
+#receiptImg{transition:opacity .5s ease;}
+#receiptImg.fading{opacity:0;}
+</style>
+<script>
+(function(){
+  var swatches=document.querySelectorAll('.rcpt-swatch');
+  var img=document.getElementById('receiptImg');
+  var label=document.getElementById('receiptColorLabel');
+  var colors=[
+    {color:'White', img:'wedding%20packages%20image/receipt-white.png'},
+    {color:'Oak',   img:'wedding%20packages%20image/receipt-oak.png'},
+    {color:'Walnut',img:'wedding%20packages%20image/receipt-walnut.png'}
+  ];
+  var current=0;
+  var auto=true;
+  var timer;
+
+  function switchTo(idx,manual){
+    if(manual){ auto=false; clearInterval(timer); }
+    current=idx;
+    img.classList.add('fading');
+    setTimeout(function(){
+      img.src=colors[idx].img;
+      label.textContent=colors[idx].color;
+      img.classList.remove('fading');
+      swatches.forEach(function(x){x.classList.remove('active');});
+      swatches[idx].classList.add('active');
+    },500);
+  }
+
+  swatches.forEach(function(s,i){
+    s.addEventListener('click',function(){ switchTo(i,true); });
+  });
+
+  timer=setInterval(function(){
+    if(!auto) return;
+    switchTo((current+1)%3,false);
+  },2800);
+})();
+</script>
 
 
 <!-- LOCATIONS -->
 <section id="locations">
   <div class="sec-label reveal">Where to find us</div>
-  <h2 class="sec-title reveal reveal-d1">Locations <span class="loc-title-count">28</span></h2>
+  <h2 class="sec-title reveal reveal-d1">Locations <span class="loc-title-count">30</span></h2>
 
   <div class="loc-layout">
 
@@ -632,11 +740,11 @@ footer{padding:48px 64px;border-top:1px solid #0a0a0a;display:flex;justify-conte
     <!-- RIGHT: FILTERS + GRID -->
     <div class="loc-right">
       <div class="loc-filters">
-        <button class="loc-filter active">All <span class="count">28</span></button>
-        <button class="loc-filter">Bangkok <span class="count">9</span></button>
+        <button class="loc-filter active">All <span class="count">30</span></button>
+        <button class="loc-filter">Bangkok <span class="count">10</span></button>
         <button class="loc-filter">Central <span class="count">5</span></button>
         <button class="loc-filter">East <span class="count">4</span></button>
-        <button class="loc-filter">Northeast <span class="count">6</span></button>
+        <button class="loc-filter">Northeast <span class="count">7</span></button>
         <button class="loc-filter">North <span class="count">1</span></button>
         <button class="loc-filter">South <span class="count">3</span></button>
       </div>
@@ -650,6 +758,7 @@ footer{padding:48px 64px;border-top:1px solid #0a0a0a;display:flex;justify-conte
         <div class="loc-card" data-region="Bangkok"><div class="loc-name">Slowcombo</div><div class="loc-city">Silom · BKK</div></div>
         <div class="loc-card" data-region="Bangkok"><div class="loc-name">Sonny Ari</div><div class="loc-city">Ari · BKK</div></div>
         <div class="loc-card" data-region="Bangkok"><div class="loc-name">Livingroom</div><div class="loc-city">Thonglor 13 · BKK</div></div>
+        <div class="loc-card" data-region="Bangkok"><div class="loc-name">Good Trouble Bar</div><div class="loc-city">Bangkok · BKK</div></div>
         <div class="loc-card" data-region="Central"><div class="loc-name">Saturday Cafe</div><div class="loc-city">Nakhon Pathom</div></div>
         <div class="loc-card" data-region="Central"><div class="loc-name">Mosoyodia</div><div class="loc-city">Ayutthaya</div></div>
         <div class="loc-card" data-region="Central"><div class="loc-name">Coffee Please in the Garden</div><div class="loc-city">Ratchaburi</div></div>
@@ -665,12 +774,13 @@ footer{padding:48px 64px;border-top:1px solid #0a0a0a;display:flex;justify-conte
         <div class="loc-card" data-region="Northeast"><div class="loc-name">Godfather</div><div class="loc-city">Ubon Ratchathani</div></div>
         <div class="loc-card" data-region="Northeast"><div class="loc-name">Tempo</div><div class="loc-city">Ubon Ratchathani</div></div>
         <div class="loc-card" data-region="Northeast"><div class="loc-name">Buriram United</div><div class="loc-city">Buriram</div></div>
+        <div class="loc-card" data-region="Northeast"><div class="loc-name">Xintong Gelato</div><div class="loc-city">Khon Kaen</div></div>
         <div class="loc-card" data-region="North"><div class="loc-name">Fringe</div><div class="loc-city">Chiang Mai</div></div>
         <div class="loc-card" data-region="South"><div class="loc-name">Major Ocean</div><div class="loc-city">Chumphon · Booth 1</div></div>
         <div class="loc-card" data-region="South"><div class="loc-name">Major Ocean</div><div class="loc-city">Chumphon · Booth 2</div></div>
         <div class="loc-card" data-region="South"><div class="loc-name">Nawa Cafe</div><div class="loc-city">Chumphon</div></div>
       </div>
-      <div class="loc-count">28 locations across Thailand</div>
+      <div class="loc-count">30 locations across Thailand</div>
     </div>
   </div>
 </section>
