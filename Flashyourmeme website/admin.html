@@ -160,7 +160,7 @@ if (sessionStorage.getItem('fym_auth') === '1') {
   renderHistory();
 }
 
-async function createLink() {
+function createLink() {
   const title = document.getElementById('fTitle').value.trim();
   const amount = document.getElementById('fAmount').value.trim();
   const description = document.getElementById('fDesc').value.trim();
@@ -168,43 +168,22 @@ async function createLink() {
   if (!title) { alert('กรุณากรอกชื่อลูกค้า / ชื่องาน'); return; }
   if (!amount || parseFloat(amount) < 20) { alert('จำนวนเงินขั้นต่ำ 20 บาท'); return; }
 
-  const btn = document.getElementById('createBtn');
-  btn.disabled = true;
-  btn.textContent = 'กำลังสร้าง...';
+  const base = location.origin;
+  const params = new URLSearchParams({ a: amount, t: title });
+  if (description) params.set('d', description);
+  const payUrl = `${base}/pay?${params.toString()}`;
 
-  const resultEl = document.getElementById('result');
-  resultEl.style.display = 'none';
+  document.getElementById('resultAmount').textContent = `฿${parseFloat(amount).toLocaleString('th-TH')} — ${title}`;
+  document.getElementById('resultUrl').textContent = payUrl;
   document.getElementById('resultErr').textContent = '';
+  document.getElementById('result').style.display = 'block';
 
-  try {
-    const res = await fetch('/api/create-link', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount, title, description }),
-    });
-    const data = await res.json();
+  saveHistory({ title, amount: parseFloat(amount), url: payUrl, date: new Date().toLocaleDateString('th-TH') });
+  renderHistory();
 
-    if (!res.ok) throw new Error(data.error || 'เกิดข้อผิดพลาด');
-
-    document.getElementById('resultAmount').textContent = `฿${parseFloat(data.amount).toLocaleString('th-TH')} — ${data.title}`;
-    document.getElementById('resultUrl').textContent = data.payment_url;
-    resultEl.style.display = 'block';
-
-    saveHistory({ title, amount: data.amount, url: data.payment_url, date: new Date().toLocaleDateString('th-TH') });
-    renderHistory();
-
-    document.getElementById('fTitle').value = '';
-    document.getElementById('fAmount').value = '';
-    document.getElementById('fDesc').value = '';
-  } catch (err) {
-    resultEl.style.display = 'block';
-    document.getElementById('resultAmount').textContent = '';
-    document.getElementById('resultUrl').textContent = '';
-    document.getElementById('resultErr').textContent = err.message;
-  }
-
-  btn.disabled = false;
-  btn.textContent = 'สร้าง Payment Link';
+  document.getElementById('fTitle').value = '';
+  document.getElementById('fAmount').value = '';
+  document.getElementById('fDesc').value = '';
 }
 
 function copyLink() {

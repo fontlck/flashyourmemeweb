@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ชำระเงิน — FLASHYOURMEME</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700;900&family=Prompt:wght@300;400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.omise.co/omise.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#030303;color:#fff;font-family:'Prompt',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+
+.wrap{width:100%;max-width:420px;}
+
+.brand{font-family:'DM Sans',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:40px;text-align:center;}
+
+.order-card{background:#0e0e0e;border:1px solid #1a1a1a;padding:24px;margin-bottom:24px;}
+.order-label{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:6px;}
+.order-title{font-family:'DM Sans',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:16px;}
+.order-amount{font-family:'DM Sans',sans-serif;font-size:2.2rem;font-weight:900;letter-spacing:-.04em;color:#e8ff5a;}
+.order-currency{font-size:.75rem;color:rgba(255,255,255,.4);margin-top:4px;}
+
+.form-card{background:#0e0e0e;border:1px solid #1a1a1a;padding:24px;}
+.form-title{font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:20px;}
+
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.field label{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);}
+.field input{background:#060606;border:1px solid #1a1a1a;color:#fff;padding:12px 14px;font-family:'Prompt',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;width:100%;}
+.field input:focus{border-color:#444;}
+.field input::placeholder{color:rgba(255,255,255,.2);}
+
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+.pay-btn{width:100%;background:#e8ff5a;color:#000;padding:14px;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;border:none;cursor:pointer;margin-top:8px;transition:background .2s;}
+.pay-btn:hover{background:#d4eb3f;}
+.pay-btn:disabled{background:#1a1a1a;color:#444;cursor:not-allowed;}
+
+.secure-note{text-align:center;font-size:.65rem;color:rgba(255,255,255,.25);margin-top:12px;line-height:1.6;}
+
+/* States */
+.state{display:none;flex-direction:column;align-items:center;gap:16px;text-align:center;padding:40px 0;}
+.state-icon{font-size:48px;}
+.state-title{font-family:'DM Sans',sans-serif;font-size:1.4rem;font-weight:900;letter-spacing:-.03em;}
+.state-sub{font-size:.85rem;color:rgba(255,255,255,.5);line-height:1.7;}
+.state-amount{font-family:'DM Sans',sans-serif;font-size:2rem;font-weight:900;color:#e8ff5a;}
+
+.err-box{background:#1a0000;border:1px solid #440000;padding:12px 14px;font-size:.8rem;color:#ff6666;margin-top:12px;display:none;line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">Flashyourmeme — Secure Payment</div>
+
+  <!-- SUCCESS -->
+  <div class="state" id="stateSuccess">
+    <div class="state-icon">✓</div>
+    <div class="state-title">ชำระเงินสำเร็จ</div>
+    <div class="state-amount" id="successAmount"></div>
+    <div class="state-sub">ขอบคุณที่ใช้บริการ FLASHYOURMEME<br>ทีมงานจะติดต่อกลับเร็วๆ นี้ครับ</div>
+  </div>
+
+  <!-- FORM -->
+  <div id="stateForm">
+    <div class="order-card">
+      <div class="order-label">รายการชำระเงิน</div>
+      <div class="order-title" id="orderTitle">—</div>
+      <div class="order-amount" id="orderAmount">฿0</div>
+      <div class="order-currency">THB · บาทไทย</div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-title">ข้อมูลบัตรเครดิต / เดบิต</div>
+      <div class="field">
+        <label>ชื่อบนบัตร</label>
+        <input type="text" id="cardName" placeholder="SOMCHAI JAIDEE" autocomplete="cc-name"/>
+      </div>
+      <div class="field">
+        <label>หมายเลขบัตร</label>
+        <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" autocomplete="cc-number"/>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label>วันหมดอายุ</label>
+          <input type="text" id="cardExpiry" placeholder="MM / YY" maxlength="7" autocomplete="cc-exp"/>
+        </div>
+        <div class="field">
+          <label>CVV</label>
+          <input type="text" id="cardCvv" placeholder="000" maxlength="4" autocomplete="cc-csc"/>
+        </div>
+      </div>
+      <div class="err-box" id="errBox"></div>
+      <button class="pay-btn" id="payBtn" onclick="submitPayment()">ชำระเงิน</button>
+      <p class="secure-note">🔒 ข้อมูลบัตรถูกเข้ารหัสด้วย SSL และส่งผ่าน Omise — FLASHYOURMEME ไม่เก็บข้อมูลบัตรของคุณ</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const amount = parseFloat(params.get('a') || '0');
+const title  = params.get('t') || 'FLASHYOURMEME';
+const desc   = params.get('d') || '';
+
+document.getElementById('orderTitle').textContent  = title + (desc ? ' — ' + desc : '');
+document.getElementById('orderAmount').textContent = '฿' + amount.toLocaleString('th-TH');
+
+// Format card number
+document.getElementById('cardNumber').addEventListener('input', function(e) {
+  let v = e.target.value.replace(/\D/g,'').slice(0,16);
+  e.target.value = v.match(/.{1,4}/g)?.join(' ') || v;
+});
+
+// Format expiry
+document.getElementById('cardExpiry').addEventListener('input', function(e) {
+  let v = e.target.value.replace(/\D/g,'').slice(0,4);
+  if (v.length > 2) v = v.slice(0,2) + ' / ' + v.slice(2);
+  e.target.value = v;
+});
+
+Omise.setPublicKey('pkey_624jcbfnjq4k2gxb7pw');
+
+async function submitPayment() {
+  const btn = document.getElementById('payBtn');
+  const errBox = document.getElementById('errBox');
+  errBox.style.display = 'none';
+
+  const name   = document.getElementById('cardName').value.trim();
+  const number = document.getElementById('cardNumber').value.replace(/\s/g,'');
+  const expiry = document.getElementById('cardExpiry').value.replace(/\s/g,'').replace('/','');
+  const cvv    = document.getElementById('cardCvv').value.trim();
+
+  if (!name || !number || expiry.length < 4 || !cvv) {
+    showErr('กรุณากรอกข้อมูลบัตรให้ครบถ้วน');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'กำลังดำเนินการ...';
+
+  Omise.createToken('card', {
+    name: name,
+    number: number,
+    expiration_month: parseInt(expiry.slice(0,2)),
+    expiration_year: parseInt('20' + expiry.slice(2,4)),
+    security_code: cvv,
+  }, async function(statusCode, response) {
+    if (statusCode !== 200 || response.object === 'error') {
+      showErr(response.message || 'ข้อมูลบัตรไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง');
+      btn.disabled = false;
+      btn.textContent = 'ชำระเงิน';
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/create-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          token: response.id,
+          amount: amount,
+          title: title,
+          description: desc,
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'เกิดข้อผิดพลาด');
+
+      if (data.authorize_uri) {
+        // 3DS redirect
+        location.href = data.authorize_uri;
+      } else {
+        // Success
+        document.getElementById('stateForm').style.display = 'none';
+        const s = document.getElementById('stateSuccess');
+        s.style.display = 'flex';
+        document.getElementById('successAmount').textContent = '฿' + amount.toLocaleString('th-TH');
+      }
+    } catch(err) {
+      showErr(err.message);
+      btn.disabled = false;
+      btn.textContent = 'ชำระเงิน';
+    }
+  });
+}
+
+function showErr(msg) {
+  const e = document.getElementById('errBox');
+  e.textContent = msg;
+  e.style.display = 'block';
+}
+</script>
+</body>
+</html>
