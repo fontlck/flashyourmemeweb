@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FYM Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700;900&family=Prompt:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#030303;color:#fff;font-family:'Prompt',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+
+/* LOGIN */
+.login-wrap{width:100%;max-width:380px;}
+.login-logo{font-family:'DM Sans',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:40px;text-align:center;}
+.login-title{font-family:'DM Sans',sans-serif;font-size:1.6rem;font-weight:900;letter-spacing:-.03em;text-transform:uppercase;margin-bottom:32px;text-align:center;}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.field label{font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);}
+.field input{background:#0e0e0e;border:1px solid #1a1a1a;color:#fff;padding:12px 14px;font-family:'Prompt',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;}
+.field input:focus{border-color:#444;}
+.btn-primary{width:100%;background:#fff;color:#000;padding:13px;font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;border:none;cursor:pointer;margin-top:8px;transition:background .2s;}
+.btn-primary:hover{background:#ddd;}
+.err{font-size:.75rem;color:#ff4444;margin-top:8px;text-align:center;min-height:20px;}
+
+/* ADMIN PANEL */
+.panel{width:100%;max-width:560px;display:none;}
+.panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;}
+.panel-logo{font-family:'DM Sans',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.3);}
+.logout-btn{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);background:none;border:none;cursor:pointer;transition:color .2s;}
+.logout-btn:hover{color:#fff;}
+.panel-title{font-family:'DM Sans',sans-serif;font-size:1.8rem;font-weight:900;letter-spacing:-.03em;text-transform:uppercase;margin-bottom:8px;}
+.panel-sub{font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:36px;}
+
+.form-card{background:#0e0e0e;border:1px solid #1a1a1a;padding:28px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-row .field{margin-bottom:0;}
+.field textarea{background:#0e0e0e;border:1px solid #1a1a1a;color:#fff;padding:12px 14px;font-family:'Prompt',sans-serif;font-size:.85rem;outline:none;transition:border-color .2s;resize:vertical;min-height:80px;}
+.field textarea:focus{border-color:#444;}
+.amount-wrap{position:relative;}
+.amount-wrap input{padding-left:42px;}
+.amount-wrap::before{content:'฿';position:absolute;left:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.4);font-size:.9rem;pointer-events:none;}
+
+.create-btn{width:100%;background:#e8ff5a;color:#000;padding:14px;font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;border:none;cursor:pointer;margin-top:20px;transition:background .2s;}
+.create-btn:hover{background:#d4eb3f;}
+.create-btn:disabled{background:#333;color:#666;cursor:not-allowed;}
+
+/* RESULT */
+.result{margin-top:24px;padding:20px;border:1px solid #1a1a1a;display:none;}
+.result-label{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px;}
+.result-amount{font-family:'DM Sans',sans-serif;font-size:1.4rem;font-weight:900;margin-bottom:16px;}
+.link-box{display:flex;gap:8px;align-items:center;}
+.link-url{flex:1;background:#060606;border:1px solid #222;padding:10px 12px;font-size:.78rem;color:#e8ff5a;word-break:break-all;line-height:1.5;}
+.copy-btn{background:#fff;color:#000;border:none;padding:10px 16px;font-family:'DM Sans',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background .2s;}
+.copy-btn:hover{background:#ddd;}
+.copy-btn.copied{background:#e8ff5a;}
+.result-err{color:#ff4444;font-size:.8rem;}
+
+/* History */
+.history{margin-top:32px;}
+.history-title{font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:12px;}
+.history-list{display:flex;flex-direction:column;gap:1px;background:#111;}
+.history-item{background:#000;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.history-name{font-size:.85rem;font-weight:500;}
+.history-amount{font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:700;color:#e8ff5a;flex-shrink:0;}
+.history-link{font-size:.65rem;color:rgba(255,255,255,.3);text-decoration:none;flex-shrink:0;}
+.history-link:hover{color:#fff;}
+.no-history{font-size:.8rem;color:rgba(255,255,255,.25);padding:16px 0;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-logo">Flashyourmeme</div>
+  <div class="login-title">Admin Login</div>
+  <div class="field">
+    <label>Username</label>
+    <input type="text" id="loginUser" placeholder="username" autocomplete="username"/>
+  </div>
+  <div class="field">
+    <label>Password</label>
+    <input type="password" id="loginPass" placeholder="password" autocomplete="current-password"/>
+  </div>
+  <button class="btn-primary" onclick="doLogin()">เข้าสู่ระบบ</button>
+  <div class="err" id="loginErr"></div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="panel" id="adminPanel">
+  <div class="panel-header">
+    <div class="panel-logo">Flashyourmeme Admin</div>
+    <button class="logout-btn" onclick="doLogout()">ออกจากระบบ</button>
+  </div>
+  <div class="panel-title">สร้าง Payment Link</div>
+  <div class="panel-sub">กรอกรายละเอียดแล้วกด "สร้าง Link" เพื่อส่งให้ลูกค้าชำระเงิน</div>
+
+  <div class="form-card">
+    <div class="form-row">
+      <div class="field">
+        <label>ชื่อลูกค้า / ชื่องาน</label>
+        <input type="text" id="fTitle" placeholder="เช่น คุณสมชาย งานแต่งงาน"/>
+      </div>
+      <div class="field">
+        <label>จำนวนเงิน (บาท)</label>
+        <div class="amount-wrap">
+          <input type="number" id="fAmount" placeholder="5000" min="20"/>
+        </div>
+      </div>
+    </div>
+    <div class="field" style="margin-top:16px;">
+      <label>รายละเอียดเพิ่มเติม</label>
+      <textarea id="fDesc" placeholder="เช่น เช่าตู้ Photo Booth 1 วัน พร้อมทีมงาน"></textarea>
+    </div>
+    <button class="create-btn" id="createBtn" onclick="createLink()">สร้าง Payment Link</button>
+  </div>
+
+  <div class="result" id="result">
+    <div class="result-label">Payment Link สำเร็จ</div>
+    <div class="result-amount" id="resultAmount"></div>
+    <div class="link-box">
+      <div class="link-url" id="resultUrl"></div>
+      <button class="copy-btn" id="copyBtn" onclick="copyLink()">Copy</button>
+    </div>
+    <div class="result-err" id="resultErr"></div>
+  </div>
+
+  <div class="history" id="historyWrap">
+    <div class="history-title">รายการที่สร้างไว้</div>
+    <div class="history-list" id="historyList"></div>
+  </div>
+</div>
+
+<script>
+const USERS = { admin: 'fymadmin' };
+
+function doLogin() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  if (USERS[u] && USERS[u] === p) {
+    sessionStorage.setItem('fym_auth', '1');
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    renderHistory();
+  } else {
+    document.getElementById('loginErr').textContent = 'Username หรือ Password ไม่ถูกต้อง';
+  }
+}
+
+function doLogout() {
+  sessionStorage.removeItem('fym_auth');
+  location.reload();
+}
+
+document.getElementById('loginPass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+if (sessionStorage.getItem('fym_auth') === '1') {
+  document.getElementById('loginWrap').style.display = 'none';
+  document.getElementById('adminPanel').style.display = 'block';
+  renderHistory();
+}
+
+async function createLink() {
+  const title = document.getElementById('fTitle').value.trim();
+  const amount = document.getElementById('fAmount').value.trim();
+  const description = document.getElementById('fDesc').value.trim();
+
+  if (!title) { alert('กรุณากรอกชื่อลูกค้า / ชื่องาน'); return; }
+  if (!amount || parseFloat(amount) < 20) { alert('จำนวนเงินขั้นต่ำ 20 บาท'); return; }
+
+  const btn = document.getElementById('createBtn');
+  btn.disabled = true;
+  btn.textContent = 'กำลังสร้าง...';
+
+  const resultEl = document.getElementById('result');
+  resultEl.style.display = 'none';
+  document.getElementById('resultErr').textContent = '';
+
+  try {
+    const res = await fetch('/api/create-link', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount, title, description }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.error || 'เกิดข้อผิดพลาด');
+
+    document.getElementById('resultAmount').textContent = `฿${parseFloat(data.amount).toLocaleString('th-TH')} — ${data.title}`;
+    document.getElementById('resultUrl').textContent = data.payment_url;
+    resultEl.style.display = 'block';
+
+    saveHistory({ title, amount: data.amount, url: data.payment_url, date: new Date().toLocaleDateString('th-TH') });
+    renderHistory();
+
+    document.getElementById('fTitle').value = '';
+    document.getElementById('fAmount').value = '';
+    document.getElementById('fDesc').value = '';
+  } catch (err) {
+    resultEl.style.display = 'block';
+    document.getElementById('resultAmount').textContent = '';
+    document.getElementById('resultUrl').textContent = '';
+    document.getElementById('resultErr').textContent = err.message;
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'สร้าง Payment Link';
+}
+
+function copyLink() {
+  const url = document.getElementById('resultUrl').textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function saveHistory(item) {
+  const hist = JSON.parse(localStorage.getItem('fym_history') || '[]');
+  hist.unshift(item);
+  localStorage.setItem('fym_history', JSON.stringify(hist.slice(0, 20)));
+}
+
+function renderHistory() {
+  const hist = JSON.parse(localStorage.getItem('fym_history') || '[]');
+  const list = document.getElementById('historyList');
+  if (!hist.length) {
+    list.innerHTML = '<div class="no-history">ยังไม่มีรายการ</div>';
+    return;
+  }
+  list.innerHTML = hist.map(h => `
+    <div class="history-item">
+      <div>
+        <div class="history-name">${h.title}</div>
+        <div style="font-size:.65rem;color:rgba(255,255,255,.3);margin-top:2px;">${h.date}</div>
+      </div>
+      <div class="history-amount">฿${parseFloat(h.amount).toLocaleString('th-TH')}</div>
+      <a class="history-link" href="${h.url}" target="_blank">เปิด Link →</a>
+    </div>
+  `).join('');
+}
+</script>
+</body>
+</html>
