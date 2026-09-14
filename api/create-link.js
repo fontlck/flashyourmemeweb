@@ -16,18 +16,20 @@ export default async function handler(req, res) {
 
   try {
     const credentials = Buffer.from(`${secretKey}:`).toString('base64');
-    const response = await fetch('https://api.omise.co/links', {
+
+    // Create a charge with internet banking / promptpay source
+    const response = await fetch('https://api.omise.co/charges', {
       method: 'POST',
       headers: {
         'Authorization': `Basic ${credentials}`,
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: JSON.stringify({
-        amount: Math.round(parseFloat(amount) * 100), // THB → satang
+      body: new URLSearchParams({
+        amount: Math.round(parseFloat(amount) * 100).toString(),
         currency: 'thb',
-        title: title || 'FLASHYOURMEME',
-        description: description || '',
-      }),
+        description: `${title}${description ? ' — ' + description : ''}`,
+        return_uri: 'https://flashyourmeme.com',
+      }).toString(),
     });
 
     const data = await response.json();
@@ -36,12 +38,17 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: data.message || 'Omise error' });
     }
 
+    // Omise charge URL for customer to pay
+    const paymentUrl = data.authorize_uri || data.source?.flow_url || null;
+
     return res.status(200).json({
-      payment_url: data.payment_url,
+      payment_url: paymentUrl,
+      charge_id: data.id,
       amount: data.amount / 100,
-      title: data.title,
+      title: title,
+      status: data.status,
     });
   } catch (err) {
-    return res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: 'Server error: ' + err.message });
   }
 }
